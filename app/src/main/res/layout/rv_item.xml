@@ -1,18 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
-    <ImageView
-        android:id="@+id/iv_item"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@android:color/black"
-        android:layout_marginTop="100dp"
-        />
 
     <RelativeLayout
         android:id="@+id/rl_header"
@@ -47,11 +39,19 @@
             />
     </RelativeLayout>
 
+    <ImageView
+        android:id="@+id/iv_item"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/black"
+        android:layout_below="@id/rl_header"
+        />
+
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="wrap_content"
         android:padding="@dimen/rv_item_header_padding"
-        android:layout_gravity="bottom">
+        android:layout_below="@id/iv_item">
 
         <TextView
             android:id="@+id/tv_likes"
@@ -69,12 +69,11 @@
             android:layout_marginLeft="@dimen/default_margin"
             android:text="Caption"/>
 
-        <View
+        <TextView
             android:id="@+id/tv_comment"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layout_heightPercent="80%"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_below="@id/tv_likes"/>
     </RelativeLayout>
 
-</FrameLayout>
+</RelativeLayout>
