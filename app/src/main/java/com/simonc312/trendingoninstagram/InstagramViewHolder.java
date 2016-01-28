@@ -23,6 +23,8 @@ class InstagramViewHolder extends RecyclerView.ViewHolder {
     TextView timePosted;
     @Bind(R.id.tv_likes)
     TextView tv_likes;
+    @Bind(R.id.tv_caption)
+    TextView tv_caption;
 
     public InstagramViewHolder(View itemView) {
         super(itemView);
@@ -48,4 +50,7 @@ class InstagramViewHolder extends RecyclerView.ViewHolder {
                 .into(image);
     }
 
+    public void setCaption(String caption) {
+        tv_caption.setText(caption);
+    }
 }

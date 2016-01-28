@@ -20,13 +20,14 @@
         android:layout_height="0dp"
         app:layout_heightPercent="10%"
         android:padding="@dimen/rv_item_header_padding"
-        android:background="@android:color/holo_blue_light">
+        android:background="@color/md_grey_300">
 
         <ImageView
             android:id="@+id/iv_profile"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
             android:src="@android:drawable/btn_plus"/>
 
         <TextView
@@ -34,6 +35,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@id/iv_profile"
+            android:layout_centerVertical="true"
             android:text="\@sleepgroper"/>
 
         <TextView
@@ -41,6 +43,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
             android:text="Just now"
             />
     </android.support.percent.PercentRelativeLayout>
@@ -57,7 +60,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:drawableLeft="@android:drawable/arrow_up_float"
+            android:drawablePadding="@dimen/drawable_padding"
             android:text="420"/>
+
+        <TextView
+            android:id="@+id/tv_caption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/tv_likes"
+            android:layout_marginLeft="@dimen/default_margin"
+            android:text="Caption"/>
 
         <View
             android:id="@+id/tv_comment"

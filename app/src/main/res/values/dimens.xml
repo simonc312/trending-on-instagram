@@ -3,4 +3,6 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="rv_item_header_padding">8dp</dimen>
+    <dimen name="default_margin">16dp</dimen>
+    <dimen name="drawable_padding">4dp</dimen>
 </resources>

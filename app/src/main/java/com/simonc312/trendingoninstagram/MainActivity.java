@@ -7,12 +7,23 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.JsonHttpResponseHandler;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import butterknife.Bind;
+import butterknife.BindString;
 import butterknife.ButterKnife;
+import cz.msebera.android.httpclient.Header;
 
 public class MainActivity extends AppCompatActivity {
 
+    @BindString(R.string.client_id) String CLIENT_ID;
     @Bind(R.id.swipeContainer)
     SwipeRefreshLayout swipeContainer;
     @Bind(R.id.rvItems)
@@ -33,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
         swipeContainer.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh() {
-                fetchTimelineAsync(0);
+                fetchTimelineAsync();
             }
         });
         // Configure the refreshing colors
@@ -58,8 +69,55 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
     }
 
-    private void fetchTimelineAsync(int time) {
+    private void fetchTimelineAsync() {
+        String url = "https://api.instagram.com/v1/media/popular?client_id="+CLIENT_ID;
 
-        swipeContainer.setRefreshing(false);
+        AsyncHttpClient client = new AsyncHttpClient();
+        client.get(url, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                // Root JSON in response is an dictionary i.e { "data : [ ... ] }
+                // Handle resulting parsed JSON response here
+                handleSuccessResponse(response);
+                swipeContainer.setRefreshing(false);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String res, Throwable t) {
+                // called when response HTTP status is "4XX" (eg. 401, 403, 404)
+                handleErrorResponse(res);
+                swipeContainer.setRefreshing(false);
+            }
+        });
+
+    }
+
+    private void handleSuccessResponse(JSONObject response) {
+        try {
+            JSONArray dataArray = response.getJSONArray("data");
+            // - type = "image" or "video"
+            // - caption.text
+            // - images.standard_resolution.url
+            // - user.username
+            // - likes.count
+            for(int i=0; i<dataArray.length();i++){
+                JSONObject data = dataArray.getJSONObject(i);
+                if(!data.has("images"))
+                    continue;
+                String username = data.getJSONObject("user").getString("username");
+                String imageSource = data.getJSONObject("images").getJSONObject("standard_resolution").getString("url");
+                String caption = data.getJSONObject("caption").getString("text");
+                String likeCount = data.getJSONObject("likes").getString("count");
+                JSONArray comments = data.getJSONObject("comments").getJSONArray("data");
+                InstagramPostData postData = new InstagramPostData();
+
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void handleErrorResponse(String response) {
+        Log.e("Error",response);
     }
 }

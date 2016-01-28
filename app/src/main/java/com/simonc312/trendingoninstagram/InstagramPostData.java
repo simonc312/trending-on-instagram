@@ -8,6 +8,7 @@ public class InstagramPostData {
     private String username;
     private String likeCount;
     private String timePosted;
+    private String caption;
     private String imageSource;
 
 
@@ -15,7 +16,16 @@ public class InstagramPostData {
         this.username = "sleepgroper";
         this.likeCount = "420";
         this.timePosted = "Just now";
+        this.caption = "Caption caption caption";
         this.imageSource = "kadkfjs";
+    }
+
+    public InstagramPostData(String username, String likeCount, String timePosted, String caption, String imageSource){
+        this.username = username;
+        this.likeCount = likeCount;
+        this.timePosted = timePosted;
+        this.caption = caption;
+        this.imageSource = imageSource;
     }
 
     public String getUsername() {
@@ -32,5 +42,9 @@ public class InstagramPostData {
 
     public String getImageSource() {
         return imageSource;
+    }
+
+    public String getCaption() {
+        return caption;
     }
 }
