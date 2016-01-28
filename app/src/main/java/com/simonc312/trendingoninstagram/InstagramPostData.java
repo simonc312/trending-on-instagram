@@ -16,7 +16,7 @@ public class InstagramPostData {
     public InstagramPostData(){
         this.username = "sleepgroper";
         this.likeCount = "420";
-        this.timePosted = "Just now";
+        this.timePosted = "1296251679";
         this.caption = "Caption caption caption";
         this.imageSource = "image source";
         this.profileImageSource = "profile img";
@@ -53,5 +53,20 @@ public class InstagramPostData {
 
     public String getProfileImageSource() {
         return profileImageSource;
+    }
+
+    public String getRelativeTimePosted(){
+        //in seconds
+        long timeDifference = (System.currentTimeMillis()/1000 - Long.valueOf(this.getTimePosted()));
+        String[] timeUnits = new String[]{"Just now","min","h","d","w","m","y"};
+        int[] incrementFactors = new int[]{60,60,24,7,4,12};
+        int index = 0;
+        while(index < incrementFactors.length && timeDifference > incrementFactors[index]){
+            timeDifference /= incrementFactors[index];
+            index++;
+        }
+        String relativeTime =  String.format("%d%s",(int)Math.ceil(timeDifference),timeUnits[index]);
+
+        return relativeTime;
     }
 }
