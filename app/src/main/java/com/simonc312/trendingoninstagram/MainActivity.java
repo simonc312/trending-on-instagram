@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        setupRV(this, recyclerView, adapter);
+        setupRV(this, recyclerView);
         setupSwipeToRefresh(swipeContainer);
     }
 
@@ -57,9 +57,9 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void setupRV(Context context, RecyclerView recyclerView, InstagramAdapter adapter) {
+    private void setupRV(Context context, RecyclerView recyclerView) {
         if(adapter == null){
-            adapter = new InstagramAdapter();
+            adapter = new InstagramAdapter(this);
         }
         if(layoutManager == null){
             layoutManager = new LinearLayoutManager(context);
@@ -102,15 +102,16 @@ public class MainActivity extends AppCompatActivity {
             // - likes.count
             for(int i=0; i<dataArray.length();i++){
                 JSONObject data = dataArray.getJSONObject(i);
-                if(!data.has("images"))
-                    continue;
-                String username = data.getJSONObject("user").getString("username");
-                String imageSource = data.getJSONObject("images").getJSONObject("standard_resolution").getString("url");
-                String caption = data.getJSONObject("caption").getString("text");
-                String likeCount = data.getJSONObject("likes").getString("count");
-                JSONArray comments = data.getJSONObject("comments").getJSONArray("data");
-                InstagramPostData postData = new InstagramPostData();
-
+                if(data.getString("type").equals("image")){
+                    String username = data.getJSONObject("user").getString("username");
+                    String imageSource = data.getJSONObject("images").getJSONObject("standard_resolution").getString("url");
+                    String caption = data.has("caption") && !data.isNull("caption") ? data.getJSONObject("caption").getString("text") : "";
+                    String likeCount = data.getJSONObject("likes").getString("count");
+                    String timePosted = data.getString("created_time");
+                    JSONArray comments = data.getJSONObject("comments").getJSONArray("data");
+                    InstagramPostData postData = new InstagramPostData(username, likeCount, timePosted, caption, imageSource);
+                    adapter.addPost(postData);
+                }
             }
         } catch (JSONException e) {
             e.printStackTrace();

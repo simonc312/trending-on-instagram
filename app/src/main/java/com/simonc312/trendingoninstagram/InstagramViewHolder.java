@@ -28,7 +28,7 @@ class InstagramViewHolder extends RecyclerView.ViewHolder {
 
     public InstagramViewHolder(View itemView) {
         super(itemView);
-        ButterKnife.bind(itemView);
+        ButterKnife.bind(this,itemView);
     }
 
     public void setLikes(String likes) {

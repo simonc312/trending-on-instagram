@@ -10,6 +10,7 @@ public class InstagramPostData {
     private String timePosted;
     private String caption;
     private String imageSource;
+    private String profileImageSource;
 
 
     public InstagramPostData(){
@@ -17,7 +18,8 @@ public class InstagramPostData {
         this.likeCount = "420";
         this.timePosted = "Just now";
         this.caption = "Caption caption caption";
-        this.imageSource = "kadkfjs";
+        this.imageSource = "image source";
+        this.profileImageSource = "profile img";
     }
 
     public InstagramPostData(String username, String likeCount, String timePosted, String caption, String imageSource){
@@ -26,6 +28,7 @@ public class InstagramPostData {
         this.timePosted = timePosted;
         this.caption = caption;
         this.imageSource = imageSource;
+        this.profileImageSource = "";
     }
 
     public String getUsername() {
@@ -46,5 +49,9 @@ public class InstagramPostData {
 
     public String getCaption() {
         return caption;
+    }
+
+    public String getProfileImageSource() {
+        return profileImageSource;
     }
 }
