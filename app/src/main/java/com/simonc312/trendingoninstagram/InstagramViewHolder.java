@@ -16,7 +16,9 @@ import butterknife.ButterKnife;
 class InstagramViewHolder extends RecyclerView.ViewHolder {
 
     @Bind(R.id.iv_item)
-    ImageView image;
+    ImageView iv_image;
+    @Bind(R.id.iv_profile)
+    ImageView iv_profile;
     @Bind(R.id.tv_username)
     TextView tv_username;
     @Bind(R.id.tv_time_posted)
@@ -43,14 +45,22 @@ class InstagramViewHolder extends RecyclerView.ViewHolder {
         tv_username.setText(username);
     }
 
-    public void setImage(String src) {
-        Picasso.with(itemView.getContext())
-                .load(src)
-                .placeholder(android.R.drawable.btn_star)
-                .into(image);
+    public void setPostImage(String src) {
+        setImageHelper(src, iv_image);
+    }
+
+    public void setProfileImage(String src){
+        setImageHelper(src,iv_profile);
     }
 
     public void setCaption(String caption) {
         tv_caption.setText(caption);
+    }
+
+    private void setImageHelper(String src,ImageView image){
+        Picasso.with(itemView.getContext())
+                .load(src)
+                .placeholder(android.R.drawable.btn_star)
+                .into(image);
     }
 }

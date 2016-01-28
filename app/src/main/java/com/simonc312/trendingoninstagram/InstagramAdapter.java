@@ -33,7 +33,8 @@ public class InstagramAdapter extends RecyclerView.Adapter<InstagramViewHolder> 
     @Override
     public void onBindViewHolder(InstagramViewHolder holder, int position) {
         InstagramPostData data = postDataList.get(position);
-        holder.setImage(data.getImageSource());
+        holder.setPostImage(data.getImageSource());
+        holder.setProfileImage(data.getProfileImageSource());
         holder.setUsername(data.getUsername());
         holder.setLikes(data.getLikeCount());
         holder.setTimePosted(data.getRelativeTimePosted());

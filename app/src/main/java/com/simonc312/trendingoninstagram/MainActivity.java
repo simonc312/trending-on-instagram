@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
     private void handleSuccessResponse(JSONObject response) {
         try {
             JSONArray dataArray = response.getJSONArray("data");
-            // - type = "image" or "video"
+            // - type = "iv_image" or "video"
             // - caption.text
             // - images.standard_resolution.url
             // - user.username
@@ -104,12 +104,13 @@ public class MainActivity extends AppCompatActivity {
                 JSONObject data = dataArray.getJSONObject(i);
                 if(data.getString("type").equals("image")){
                     String username = data.getJSONObject("user").getString("username");
+                    String profileImageSource = data.getJSONObject("user").getString("profile_picture");
                     String imageSource = data.getJSONObject("images").getJSONObject("standard_resolution").getString("url");
                     String caption = data.has("caption") && !data.isNull("caption") ? data.getJSONObject("caption").getString("text") : "";
                     String likeCount = data.getJSONObject("likes").getString("count");
                     String timePosted = data.getString("created_time");
                     JSONArray comments = data.getJSONObject("comments").getJSONArray("data");
-                    InstagramPostData postData = new InstagramPostData(username, likeCount, timePosted, caption, imageSource);
+                    InstagramPostData postData = new InstagramPostData(username, profileImageSource, likeCount, timePosted, caption, imageSource);
                     adapter.addPost(postData);
                 }
             }
