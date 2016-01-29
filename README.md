@@ -19,7 +19,12 @@ Project Week 1 for Codepath Android Dev Bootcamp.
     
     6) time posted
     
-    7) comments with usernames 
+    7) comments with usernames
+    
+- Extra Features:
+
+    1) Searchview
+    
     
 
 - Style:
@@ -36,3 +41,7 @@ Project Week 1 for Codepath Android Dev Bootcamp.
     5) Prevent reloading if no wifi detected 
     
     6) Display error image if failed to load 
+    
+    7) Highlight url hashtags and usernames 
+    
+    8) Search on click hashtag or username
