@@ -36,7 +36,7 @@ public class InstagramAdapter extends RecyclerView.Adapter<InstagramViewHolder> 
         holder.setPostImage(data.getImageSource());
         holder.setProfileImage(data.getProfileImageSource());
         holder.setUsername(data.getUsername());
-        holder.setLikes(data.getLikeCount());
+        holder.setLikes(data.getDisplayLikeCount());
         holder.setTimePosted(data.getRelativeTimePosted());
         holder.setCaption(data.getCaption());
     }

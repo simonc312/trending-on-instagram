@@ -57,7 +57,7 @@ public class InstagramPostData {
 
     public String getRelativeTimePosted(){
         //in seconds
-        long timeDifference = (System.currentTimeMillis()/1000 - Long.valueOf(this.getTimePosted()));
+        long timeDifference = (System.currentTimeMillis()/1000 - Long.valueOf(this.timePosted));
         String[] timeUnits = new String[]{"Just now","min","h","d","w","m","y"};
         int[] incrementFactors = new int[]{60,60,24,7,4,12};
         int index = 0;
@@ -68,5 +68,9 @@ public class InstagramPostData {
         String relativeTime =  String.format("%d%s",(int)Math.ceil(timeDifference),timeUnits[index]);
 
         return relativeTime;
+    }
+
+    public String getDisplayLikeCount(){
+        return String.format("%s likes",this.likeCount);
     }
 }

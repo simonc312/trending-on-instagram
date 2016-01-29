@@ -13,7 +13,7 @@
         android:padding="@dimen/rv_item_header_padding"
         android:background="@color/md_grey_300">
 
-        <ImageView
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/iv_profile"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -59,7 +59,7 @@
             android:id="@+id/tv_likes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableLeft="@android:drawable/arrow_up_float"
+            android:drawableLeft="@drawable/ic_favorite_red_500_18dp"
             android:drawablePadding="@dimen/drawable_padding"
             android:text="420"/>
 
