@@ -92,6 +92,10 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private void fetchTagSearchAsync(String tag){
+        String url = String.format("https://api.instagram.com/v1/tags/%s/media/recent?client_id=%s",tag,CLIENT_ID);
+    }
+
     private void handleSuccessResponse(JSONObject response) {
         try {
             JSONArray dataArray = response.getJSONArray("data");

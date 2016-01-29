@@ -65,9 +65,9 @@ public class InstagramPostData {
             timeDifference /= incrementFactors[index];
             index++;
         }
-        String relativeTime =  String.format("%d%s",(int)Math.ceil(timeDifference),timeUnits[index]);
+        int formattedTimeDifference = Math.round(timeDifference);
 
-        return relativeTime;
+        return (index == 0) ? timeUnits[index] : String.format("%d%s",formattedTimeDifference,timeUnits[index]);
     }
 
     public String getDisplayLikeCount(){
