@@ -1,13 +1,20 @@
 package com.simonc312.trendingoninstagram;
 
 import static android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
+
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -23,6 +30,7 @@ import cz.msebera.android.httpclient.Header;
 
 public class MainActivity extends AppCompatActivity {
 
+    @BindString(R.string.action_layout_change) String ACTION_LAYOUT_CHANGE;
     @BindString(R.string.client_id) String CLIENT_ID;
     @Bind(R.id.swipeContainer)
     SwipeRefreshLayout swipeContainer;
@@ -30,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     private InstagramAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
+    private LayoutChangeBroadcastReciever broadcastReciever;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +47,20 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         setupRV(this, recyclerView);
         setupSwipeToRefresh(swipeContainer);
+        broadcastReciever = new LayoutChangeBroadcastReciever();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        IntentFilter intentFilter = new IntentFilter(ACTION_LAYOUT_CHANGE);
+        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReciever, intentFilter);
+    }
+
+    @Override
+    protected void onPause(){
+        super.onPause();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReciever);
     }
 
     private void setupSwipeToRefresh(SwipeRefreshLayout swipeContainer) {
@@ -59,12 +82,16 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupRV(Context context, RecyclerView recyclerView) {
         if(adapter == null){
-            adapter = new InstagramAdapter(this);
+            adapter = new InstagramAdapter(this,true);
         }
         if(layoutManager == null){
-            layoutManager = new LinearLayoutManager(context);
+            layoutManager = new GridLayoutManager(context,3);//new LinearLayoutManager(context);
         }
 
+        updateRV(layoutManager, adapter);
+    }
+
+    private void updateRV(RecyclerView.LayoutManager layoutManager, RecyclerView.Adapter adapter){
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
     }
@@ -125,5 +152,14 @@ public class MainActivity extends AppCompatActivity {
 
     private void handleErrorResponse(String response) {
         Log.e("Error",response);
+    }
+    
+    private class LayoutChangeBroadcastReciever extends BroadcastReceiver{
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+          //inflate fragment but pass adapter data to fragment
+            Toast.makeText(MainActivity.this,"intent received",Toast.LENGTH_SHORT).show();
+        }
     }
 }
