@@ -1,11 +1,9 @@
 package com.simonc312.trendingoninstagram;
 
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -15,8 +13,6 @@ import butterknife.ButterKnife;
  */
 class InstagramViewHolder extends GridViewHolder {
 
-    /*@Bind(R.id.iv_item)
-    ImageView iv_image;*/
     @Bind(R.id.iv_profile)
     ImageView iv_profile;
     @Bind(R.id.tv_username)

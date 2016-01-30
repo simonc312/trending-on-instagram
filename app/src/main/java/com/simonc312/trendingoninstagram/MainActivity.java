@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.support.annotation.DimenRes;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -27,12 +28,16 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import butterknife.Bind;
+import butterknife.BindDimen;
 import butterknife.BindString;
 import butterknife.ButterKnife;
 import cz.msebera.android.httpclient.Header;
 
 public class MainActivity extends AppCompatActivity {
-
+    @BindDimen(R.dimen.grid_layout_span_count)
+    int GRID_LAYOUT_SPAN_COUNT;
+    @BindDimen(R.dimen.grid_layout_item_spacing)
+    int GRID_LAYOUT_ITEM_SPACING;
     @BindString(R.string.action_layout_change) String ACTION_LAYOUT_CHANGE;
     @BindString(R.string.client_id) String CLIENT_ID;
     @Bind(R.id.swipeContainer)
@@ -88,20 +93,22 @@ public class MainActivity extends AppCompatActivity {
             adapter = new InstagramAdapter(this,true);
         }
         if(layoutManager == null){
-            layoutManager = new GridLayoutManager(context,3);//new LinearLayoutManager(context);
+            layoutManager = new GridLayoutManager(context,GRID_LAYOUT_SPAN_COUNT);//new LinearLayoutManager(context);
         }
 
-        updateRV(layoutManager, adapter);
+        updateRV(recyclerView,layoutManager, adapter);
     }
 
-    private void updateRV(RecyclerView.LayoutManager layoutManager, RecyclerView.Adapter adapter){
+    private void updateRV(RecyclerView recyclerView, RecyclerView.LayoutManager layoutManager, RecyclerView.Adapter adapter){
+        if(layoutManager instanceof GridLayoutManager)
+            recyclerView.addItemDecoration(new GridItemDecoration(GRID_LAYOUT_SPAN_COUNT,GRID_LAYOUT_ITEM_SPACING,false));
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
     }
 
     private void fetchTimelineAsync() {
-        InstagramApiHandler handler = InstagramApiHandler.getInstance();
-        handler.sendRequest(new PopularApiRequest(this));
+        /*InstagramApiHandler handler = InstagramApiHandler.getInstance();
+        handler.sendRequest(new PopularApiRequest(this));*/
         String url = "https://api.instagram.com/v1/media/popular?client_id="+CLIENT_ID;
 
         AsyncHttpClient client = new AsyncHttpClient();

@@ -28,7 +28,7 @@ public class GridViewHolder extends RecyclerView.ViewHolder{
     protected void setImageHelper(String src,ImageView image){
         Picasso.with(itemView.getContext())
                 .load(src)
-                .placeholder(android.R.color.transparent)
+                .placeholder(R.color.placeholder_color)
                 .into(image);
     }
 }

@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:padding="@dimen/rv_item_header_padding"
-        android:background="@color/md_grey_300">
+        android:background="@color/item_header_color">
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/iv_profile"
