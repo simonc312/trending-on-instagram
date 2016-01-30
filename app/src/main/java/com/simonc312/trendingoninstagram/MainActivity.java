@@ -11,13 +11,14 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
+import com.simonc312.trendingoninstagram.Api.InstagramApiHandler;
+import com.simonc312.trendingoninstagram.Api.PopularApiRequestInterface;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -97,6 +98,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void fetchTimelineAsync() {
+        InstagramApiHandler handler = InstagramApiHandler.getInstance();
+        handler.sendRequest(new PopularApiRequestInterface(this));
         String url = "https://api.instagram.com/v1/media/popular?client_id="+CLIENT_ID;
 
         AsyncHttpClient client = new AsyncHttpClient();
@@ -119,8 +122,11 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void fetchTagSearchAsync(String tag){
+    private void fetchTagNameSearchAsync(String tag){
         String url = String.format("https://api.instagram.com/v1/tags/%s/media/recent?client_id=%s",tag,CLIENT_ID);
+    }
+    private void fetchTagSearchAsync(String query){
+        String url = String.format("https://api.instagram.com/v1/tags/search/?q=%s&client_id=%s",query,CLIENT_ID);
     }
 
     private void handleSuccessResponse(JSONObject response) {
@@ -153,7 +159,7 @@ public class MainActivity extends AppCompatActivity {
     private void handleErrorResponse(String response) {
         Log.e("Error",response);
     }
-    
+
     private class LayoutChangeBroadcastReciever extends BroadcastReceiver{
 
         @Override
