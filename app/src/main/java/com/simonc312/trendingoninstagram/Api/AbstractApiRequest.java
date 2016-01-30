@@ -19,6 +19,11 @@ public abstract class AbstractApiRequest implements ApiRequestInterface {
         requestParams = new RequestParams();
         requestParams.add("client_id",CLIENT_ID);
     }
+
+    protected void addParam(String key, String value){
+        requestParams.add(key,value);
+    }
+
     @Override
     public String getUrl() {return "OVERRIDE URL";}
 
@@ -30,11 +35,6 @@ public abstract class AbstractApiRequest implements ApiRequestInterface {
     @Override
     public Context getContext(){
         return context;
-    }
-
-    @Override
-    public void addParam(String key, String value){
-        requestParams.add(key,value);
     }
 
     @Override

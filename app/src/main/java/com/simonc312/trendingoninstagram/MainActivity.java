@@ -18,7 +18,9 @@ import android.widget.Toast;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.simonc312.trendingoninstagram.Api.InstagramApiHandler;
-import com.simonc312.trendingoninstagram.Api.PopularApiRequestInterface;
+import com.simonc312.trendingoninstagram.Api.PopularApiRequest;
+import com.simonc312.trendingoninstagram.Api.TagNameSearchApiRequest;
+import com.simonc312.trendingoninstagram.Api.TagSearchApiRequest;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -99,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void fetchTimelineAsync() {
         InstagramApiHandler handler = InstagramApiHandler.getInstance();
-        handler.sendRequest(new PopularApiRequestInterface(this));
+        handler.sendRequest(new PopularApiRequest(this));
         String url = "https://api.instagram.com/v1/media/popular?client_id="+CLIENT_ID;
 
         AsyncHttpClient client = new AsyncHttpClient();
@@ -123,10 +125,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void fetchTagNameSearchAsync(String tag){
-        String url = String.format("https://api.instagram.com/v1/tags/%s/media/recent?client_id=%s",tag,CLIENT_ID);
+        TagNameSearchApiRequest request = new TagNameSearchApiRequest(this);
+        request.setTag(tag);
+        //handler.sendRequest(request);
     }
     private void fetchTagSearchAsync(String query){
-        String url = String.format("https://api.instagram.com/v1/tags/search/?q=%s&client_id=%s",query,CLIENT_ID);
+        InstagramApiHandler handler = InstagramApiHandler.getInstance();
+        TagSearchApiRequest request = new TagSearchApiRequest(this);
+        request.setQuery(query);
+        handler.sendRequest(request);
     }
 
     private void handleSuccessResponse(JSONObject response) {

@@ -17,8 +17,6 @@ public interface ApiRequestInterface {
 
     Context getContext();
 
-    void addParam(String key, String value);
-
     void processOnSuccess(JSONObject jsonResponse);
 
     void processOnFailure(String response);

@@ -10,14 +10,21 @@ import org.json.JSONObject;
 /**
  * Created by Simon on 1/29/2016.
  */
-public class TagSearchApiRequestInterface extends AbstractApiRequest {
+public class TagNameSearchApiRequest extends AbstractApiRequest {
 
-    public TagSearchApiRequestInterface(Context context){
+    private String tag;
+    public TagNameSearchApiRequest(Context context){
         super(context);
+        tag = "sleepgroper";
     }
+
+    public void setTag(String tag){
+        this.tag = tag;
+    }
+
     @Override
     public String getUrl() {
-        return "https://api.instagram.com/v1/tags/search/";
+        return String.format("https://api.instagram.com/v1/tags/%s/media/recent?",tag);
     }
 
     @Override

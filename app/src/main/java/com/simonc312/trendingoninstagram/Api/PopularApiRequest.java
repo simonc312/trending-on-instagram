@@ -8,8 +8,8 @@ import org.json.JSONObject;
 /**
  * Created by Simon on 1/29/2016.
  */
-public class PopularApiRequestInterface extends AbstractApiRequest {
-    public PopularApiRequestInterface(Context context){
+public class PopularApiRequest extends AbstractApiRequest {
+    public PopularApiRequest(Context context){
         super(context);
     }
     @Override
