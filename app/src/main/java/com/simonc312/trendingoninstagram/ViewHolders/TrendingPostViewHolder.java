@@ -5,6 +5,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 
+import com.simonc312.trendingoninstagram.Adapters.TrendingAdapter;
 import com.simonc312.trendingoninstagram.R;
 
 import butterknife.Bind;
@@ -13,7 +14,7 @@ import butterknife.ButterKnife;
 /**
  * Created by Simon on 1/26/2016.
  */
-public class InstagramViewHolder extends GridViewHolder {
+public class TrendingPostViewHolder extends GridViewHolder {
 
     @Bind(R.id.iv_profile)
     ImageView iv_profile;
@@ -26,8 +27,8 @@ public class InstagramViewHolder extends GridViewHolder {
     @Bind(R.id.tv_caption)
     TextView tv_caption;
 
-    public InstagramViewHolder(View itemView) {
-        super(itemView);
+    public TrendingPostViewHolder(View itemView,TrendingAdapter.PostItemListener listener) {
+        super(itemView,listener);
         ButterKnife.bind(this, itemView);
     }
 
@@ -50,11 +51,4 @@ public class InstagramViewHolder extends GridViewHolder {
     public void setCaption(String caption) {
         tv_caption.setText(caption);
     }
-
-    @Override
-    public void onClick(View view){
-        //super.onClick(view);
-    }
-
-
 }

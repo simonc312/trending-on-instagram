@@ -1,9 +1,12 @@
 package com.simonc312.trendingoninstagram.Fragments;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.net.Uri;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,7 +18,7 @@ import android.view.ViewGroup;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
-import com.simonc312.trendingoninstagram.Adapters.InstagramAdapter;
+import com.simonc312.trendingoninstagram.Adapters.TrendingAdapter;
 import com.simonc312.trendingoninstagram.Models.InstagramPostData;
 import com.simonc312.trendingoninstagram.R;
 import com.simonc312.trendingoninstagram.StyleHelpers.GridItemDecoration;
@@ -35,18 +38,16 @@ import cz.msebera.android.httpclient.Header;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link TrendingFragment.OnFragmentInteractionListener} interface
+ * {@link InteractionListener} interface
  * to handle interaction events.
  */
-public class TrendingFragment extends Fragment {
-    @BindString(R.string.item_position_extra)
-    String ITEM_POSITION_EXTRA;
+public class TrendingFragment extends Fragment implements TrendingAdapter.PostItemListener {
     @BindInt(R.integer.grid_layout_span_count)
     int GRID_LAYOUT_SPAN_COUNT;
     @BindInt(R.integer.grid_layout_item_spacing)
     int GRID_LAYOUT_ITEM_SPACING;
-    @BindString(R.string.action_layout_change)
-    String ACTION_LAYOUT_CHANGE;
+    @BindString(R.string.action_back_pressed)
+    String ACTION_BACK_PRESSED;
     @BindString(R.string.client_id)
     String CLIENT_ID;
     @Bind(R.id.swipeContainer)
@@ -54,25 +55,37 @@ public class TrendingFragment extends Fragment {
     @Bind(R.id.rvItems)
     RecyclerView recyclerView;
 
-    private OnFragmentInteractionListener mListener;
-    private InstagramAdapter adapter;
+    private InteractionListener mListener;
+    private BackPressedBroadcastListener backPressedListener;
+    private TrendingAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
+    private boolean useGridLayout;
 
     public TrendingFragment() {
         // Required empty public constructor
     }
 
-    public static TrendingFragment newInstance(){
-        return new TrendingFragment();
+    public static TrendingFragment newInstance(boolean useGridLayout){
+        Bundle bundle = new Bundle();
+        bundle.putBoolean("useGridLayout",useGridLayout);
+        TrendingFragment fragment = new TrendingFragment();
+        fragment.setArguments(bundle);
+        return fragment;
     }
 
+    @Override
+    public void onCreate(Bundle bundle){
+        super.onCreate(bundle);
+        backPressedListener = new BackPressedBroadcastListener();
+        handleArguments(getArguments());
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_trending_main,container,false);
         ButterKnife.bind(this, view);
-        setupRV(recyclerView,getContext());
+        setupRV(recyclerView, getContext());
         setupSwipeToRefresh(swipeContainer);
         return view;
     }
@@ -86,11 +99,11 @@ public class TrendingFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
+        if (context instanceof InteractionListener) {
+            mListener = (InteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+                    + " must implement InteractionListener");
         }
     }
 
@@ -100,24 +113,46 @@ public class TrendingFragment extends Fragment {
         mListener = null;
     }
 
+    @Override
+    public void onStart(){
+        super.onStart();
+        IntentFilter filter = new IntentFilter(ACTION_BACK_PRESSED);
+        LocalBroadcastManager.getInstance(getContext()).registerReceiver(backPressedListener, filter);
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(backPressedListener);
+    }
+
+    @Override
+    public void onPostClick(int position){
+        if(useGridLayout) {
+            adapter.setIsGridLayout(false);
+            setLinearLayout();
+            updateRV(recyclerView, layoutManager, adapter);
+            recyclerView.scrollToPosition(position);
+        }
+    }
+
+    private void handleArguments(Bundle bundle) {
+        if(!bundle.isEmpty()){
+            useGridLayout = bundle.getBoolean("useGridLayout");
+        }
+    }
+
     /**
      * When back button is pressed and fragment is visible, if linear layout revert to linear layout
      and scroll to current position
      */
     public void onBackPressed() {
-        if(layoutManager instanceof GridLayoutManager == false){
+        if(!(useGridLayout)){
             adapter.setIsGridLayout(true);
-            layoutManager = new GridLayoutManager(getContext(),GRID_LAYOUT_SPAN_COUNT);
+            setGridLayout();
             updateRV(recyclerView,layoutManager,adapter);
             recyclerView.scrollToPosition(recyclerView.getChildAdapterPosition(recyclerView.getFocusedChild()));
         }
-    }
-
-    public void onLayoutChange(int position){
-        adapter.setIsGridLayout(false);
-        setLinearLayout();
-        updateRV(recyclerView,layoutManager, adapter);
-        recyclerView.scrollToPosition(position);
     }
 
     private void setupSwipeToRefresh(SwipeRefreshLayout swipeContainer) {
@@ -139,10 +174,13 @@ public class TrendingFragment extends Fragment {
 
     private void setupRV(RecyclerView recyclerView, Context context) {
         if(adapter == null){
-            adapter = new InstagramAdapter(context,true);
+            adapter = new TrendingAdapter(context,useGridLayout,this);
         }
         if(layoutManager == null){
-            setGridLayout();
+            if(useGridLayout)
+                setGridLayout();
+            else
+                setLinearLayout();
         }
 
         recyclerView.addOnScrollListener(new RVScrollListener() {
@@ -171,6 +209,7 @@ public class TrendingFragment extends Fragment {
     }
 
     private void updateRV(RecyclerView recyclerView, RecyclerView.LayoutManager layoutManager, RecyclerView.Adapter adapter){
+        //need to remove it otherwise
         if(layoutManager instanceof GridLayoutManager)
             recyclerView.addItemDecoration(new GridItemDecoration(GRID_LAYOUT_SPAN_COUNT,GRID_LAYOUT_ITEM_SPACING,false));
         recyclerView.setLayoutManager(layoutManager);
@@ -234,15 +273,23 @@ public class TrendingFragment extends Fragment {
     }
 
     /**
+     * Probably needs to be moved outside since other recyclerviews will use it
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
      * to the activity and potentially other fragments contained in that
      * activity.
      */
-    public interface OnFragmentInteractionListener {
+    public interface InteractionListener {
 
         void onScrollDown();
 
         void onScrollUp();
+    }
+
+    private class BackPressedBroadcastListener extends BroadcastReceiver{
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            onBackPressed();
+        }
     }
 }

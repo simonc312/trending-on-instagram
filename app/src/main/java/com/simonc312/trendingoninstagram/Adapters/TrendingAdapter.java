@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import com.simonc312.trendingoninstagram.Models.InstagramPostData;
 import com.simonc312.trendingoninstagram.R;
 import com.simonc312.trendingoninstagram.ViewHolders.GridViewHolder;
-import com.simonc312.trendingoninstagram.ViewHolders.InstagramViewHolder;
+import com.simonc312.trendingoninstagram.ViewHolders.TrendingPostViewHolder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,23 +18,25 @@ import java.util.List;
 /**
  * Created by Simon on 1/26/2016.
  */
-public class InstagramAdapter extends RecyclerView.Adapter<GridViewHolder>{
+public class TrendingAdapter extends RecyclerView.Adapter<GridViewHolder>{
+    private final PostItemListener mListener;
     private Context mContext;
     private boolean isGridLayout;
     private List<InstagramPostData> postDataList;
 
 
-    public InstagramAdapter(Context context, boolean isGridLayout){
+    public TrendingAdapter(Context context, boolean isGridLayout,PostItemListener mListener){
         postDataList = new ArrayList<>();
         this.mContext = context;
         this.isGridLayout = isGridLayout;
+        this.mListener = mListener;
     }
 
     @Override
     public GridViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         int layoutID = isGridLayout ? R.layout.rv_grid_item : R.layout.rv_item;
         View view = LayoutInflater.from(mContext).inflate(layoutID, parent, false);
-        return isGridLayout ? new GridViewHolder(view) : new InstagramViewHolder(view);
+        return isGridLayout ? new GridViewHolder(view,mListener) : new TrendingPostViewHolder(view,mListener);
     }
 
     @Override
@@ -43,12 +45,12 @@ public class InstagramAdapter extends RecyclerView.Adapter<GridViewHolder>{
         holder.setPostImage(data.getImageSource());
 
         if(!isGridLayout){
-            InstagramViewHolder instagramViewHolder = (InstagramViewHolder) holder;
-            instagramViewHolder.setProfileImage(data.getProfileImageSource());
-            instagramViewHolder.setUsername(data.getUsername());
-            instagramViewHolder.setLikes(data.getDisplayLikeCount());
-            instagramViewHolder.setTimePosted(data.getRelativeTimePosted());
-            instagramViewHolder.setCaption(data.getCaption());
+            TrendingPostViewHolder trendingPostViewHolder = (TrendingPostViewHolder) holder;
+            trendingPostViewHolder.setProfileImage(data.getProfileImageSource());
+            trendingPostViewHolder.setUsername(data.getUsername());
+            trendingPostViewHolder.setLikes(data.getDisplayLikeCount());
+            trendingPostViewHolder.setTimePosted(data.getRelativeTimePosted());
+            trendingPostViewHolder.setCaption(data.getCaption());
         }
     }
 
@@ -67,7 +69,15 @@ public class InstagramAdapter extends RecyclerView.Adapter<GridViewHolder>{
         notifyDataSetChanged();
     }
 
+    public boolean isGridLayout(){
+        return isGridLayout;
+    }
+
     public void setIsGridLayout(boolean isGridLayout){
         this.isGridLayout = isGridLayout;
+    }
+
+    public interface PostItemListener {
+        void onPostClick(int position);
     }
 }

@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.simonc312.trendingoninstagram.Fragments.SearchFragment.OnListFragmentInteractionListener;
+import com.simonc312.trendingoninstagram.Fragments.SearchFragment.SearchFragmentInteractionListener;
 import com.simonc312.trendingoninstagram.Models.SearchTag;
 import com.simonc312.trendingoninstagram.R;
 
@@ -14,15 +14,15 @@ import java.util.List;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link SearchTag} and makes a call to the
- * specified {@link OnListFragmentInteractionListener}.
+ * specified {@link SearchFragmentInteractionListener}.
  * TODO: Replace the implementation with code for your data type.
  */
 public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder> {
 
     private final List<SearchTag> mValues;
-    private final OnListFragmentInteractionListener mListener;
+    private final SearchFragmentInteractionListener mListener;
 
-    public SearchAdapter(List<SearchTag> items, OnListFragmentInteractionListener listener) {
+    public SearchAdapter(List<SearchTag> items, SearchFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }

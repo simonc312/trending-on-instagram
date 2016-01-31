@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.simonc312.trendingoninstagram.Adapters.TrendingAdapter;
 import com.simonc312.trendingoninstagram.R;
 import com.squareup.picasso.Picasso;
 
@@ -17,15 +18,15 @@ import butterknife.ButterKnife;
  * Created by Simon on 1/28/2016.
  */
 public class GridViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-    @BindString(R.string.item_position_extra) String ITEM_POSITION_EXTRA;
-    @BindString(R.string.action_layout_change) String ACTION_LAYOUT_CHANGE;
     @Bind(R.id.iv_item)
     ImageView iv_item;
+    private final TrendingAdapter.PostItemListener listener;
 
-    public GridViewHolder(View itemView){
+    public GridViewHolder(View itemView,TrendingAdapter.PostItemListener listener){
         super(itemView);
         ButterKnife.bind(this,itemView);
         itemView.setOnClickListener(this);
+        this.listener = listener;
     }
 
     public void setPostImage(String src) {
@@ -41,8 +42,6 @@ public class GridViewHolder extends RecyclerView.ViewHolder implements View.OnCl
 
     @Override
     public void onClick(View v) {
-        Intent intent = new Intent(ACTION_LAYOUT_CHANGE);
-        intent.putExtra(ITEM_POSITION_EXTRA,this.getAdapterPosition());
-        LocalBroadcastManager.getInstance(v.getContext()).sendBroadcast(intent);
+        listener.onPostClick(getAdapterPosition());
     }
 }

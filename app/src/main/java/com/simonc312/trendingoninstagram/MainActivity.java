@@ -14,7 +14,6 @@ import android.os.Bundle;
 
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -29,11 +28,13 @@ import com.simonc312.trendingoninstagram.Fragments.TrendingFragment;
 
 import butterknife.Bind;
 
+import butterknife.BindString;
 import butterknife.ButterKnife;
 
 
-public class MainActivity extends AppCompatActivity implements TrendingFragment.OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements TrendingFragment.InteractionListener {
 
+    @BindString(R.string.action_back_pressed)String ACTION_BACK_PRESSED;
     @Bind(R.id.toolbar)
     Toolbar toolbar;
     private LayoutChangeBroadcastReciever broadcastReciever;
@@ -46,7 +47,7 @@ public class MainActivity extends AppCompatActivity implements TrendingFragment.
         setupSupportActionBar();
         broadcastReciever = new LayoutChangeBroadcastReciever();
         handleSearchIntent(getIntent());
-        swapFragment(TrendingFragment.newInstance());
+        swapFragment(TrendingFragment.newInstance(true));
 
     }
 
@@ -87,8 +88,13 @@ public class MainActivity extends AppCompatActivity implements TrendingFragment.
 
     @Override
     public void onBackPressed(){
-        super.onBackPressed();
-        //fragment.onBackPressed();
+        if(getSupportFragmentManager().getBackStackEntryCount() > 0){
+            LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(ACTION_BACK_PRESSED));
+            //getSupportFragmentManager().popBackStack();
+        }
+        else {
+            super.onBackPressed();
+        }
     }
 
     @Override
@@ -131,7 +137,8 @@ public class MainActivity extends AppCompatActivity implements TrendingFragment.
     private void swapFragment(Fragment fragment){
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.container,fragment)
+                .replace(R.id.container, fragment)
+                .addToBackStack(fragment.getClass().toString())
                 .commit();
     }
 
@@ -153,12 +160,12 @@ public class MainActivity extends AppCompatActivity implements TrendingFragment.
 
     @Override
     public void onScrollDown() {
-        getSupportActionBar().show();
+        getSupportActionBar().hide();
     }
 
     @Override
     public void onScrollUp() {
-        getSupportActionBar().hide();
+        getSupportActionBar().show();
     }
 
     private class LayoutChangeBroadcastReciever extends BroadcastReceiver{
@@ -166,7 +173,8 @@ public class MainActivity extends AppCompatActivity implements TrendingFragment.
         @Override
         public void onReceive(Context context, Intent intent) {
           //inflate fragment but pass adapter data to fragment
-            Toast.makeText(MainActivity.this,"intent received",Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, "intent received", Toast.LENGTH_SHORT).show();
+
         }
     }
 }

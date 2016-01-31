@@ -18,12 +18,12 @@ import java.util.ArrayList;
 /**
  * A fragment representing a list of Items.
  * <p>
- * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
+ * Activities containing this fragment MUST implement the {@link SearchFragmentInteractionListener}
  * interface.
  */
 public class SearchFragment extends Fragment {
 
-    private OnListFragmentInteractionListener mListener;
+    private SearchFragmentInteractionListener mListener;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -67,11 +67,11 @@ public class SearchFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-       /* if (context instanceof OnListFragmentInteractionListener) {
-            mListener = (OnListFragmentInteractionListener) context;
+       /* if (context instanceof SearchFragmentInteractionListener) {
+            mListener = (SearchFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement OnListFragmentInteractionListener");
+                    + " must implement SearchFragmentInteractionListener");
         }*/
     }
 
@@ -87,7 +87,7 @@ public class SearchFragment extends Fragment {
      * to the activity and potentially other fragments contained in that
      * activity.
      */
-    public interface OnListFragmentInteractionListener {
+    public interface SearchFragmentInteractionListener {
         void onListFragmentInteraction(SearchTag item);
     }
 }
