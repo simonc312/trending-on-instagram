@@ -77,6 +77,12 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onNewIntent(Intent intent){
+        setIntent(intent);
+        handleSearchIntent(intent);
+    }
+
     private void setupSupportActionBar(){
         setSupportActionBar(toolbar);
         //getSupportActionBar().setHideOnContentScrollEnabled(true);
@@ -135,6 +141,10 @@ public class MainActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.search_menu, menu);
         SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
         searchView.setQueryHint("Search users or tags");
+        // set the searchable configuration
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        // Assumes current activity is the searchable activity
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
