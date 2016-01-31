@@ -6,44 +6,57 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.support.annotation.DimenRes;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
+import com.simonc312.trendingoninstagram.Adapters.InstagramAdapter;
 import com.simonc312.trendingoninstagram.Api.InstagramApiHandler;
-import com.simonc312.trendingoninstagram.Api.PopularApiRequest;
 import com.simonc312.trendingoninstagram.Api.TagNameSearchApiRequest;
 import com.simonc312.trendingoninstagram.Api.TagSearchApiRequest;
+import com.simonc312.trendingoninstagram.Models.InstagramPostData;
+import com.simonc312.trendingoninstagram.StyleHelpers.GridItemDecoration;
+import com.simonc312.trendingoninstagram.StyleHelpers.RVScrollListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import butterknife.Bind;
-import butterknife.BindDimen;
+import butterknife.BindInt;
 import butterknife.BindString;
 import butterknife.ButterKnife;
 import cz.msebera.android.httpclient.Header;
 
 public class MainActivity extends AppCompatActivity {
-    @BindDimen(R.dimen.grid_layout_span_count)
+    @BindString(R.string.item_position_extra)
+    String ITEM_POSITION_EXTRA;
+    @BindInt(R.integer.grid_layout_span_count)
     int GRID_LAYOUT_SPAN_COUNT;
-    @BindDimen(R.dimen.grid_layout_item_spacing)
+    @BindInt(R.integer.grid_layout_item_spacing)
     int GRID_LAYOUT_ITEM_SPACING;
-    @BindString(R.string.action_layout_change) String ACTION_LAYOUT_CHANGE;
-    @BindString(R.string.client_id) String CLIENT_ID;
+    @BindString(R.string.action_layout_change)
+    String ACTION_LAYOUT_CHANGE;
+    @BindString(R.string.client_id)
+    String CLIENT_ID;
     @Bind(R.id.swipeContainer)
     SwipeRefreshLayout swipeContainer;
     @Bind(R.id.rvItems)
     RecyclerView recyclerView;
+    @Bind(R.id.toolbar)
+    Toolbar toolbar;
     private InstagramAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
     private LayoutChangeBroadcastReciever broadcastReciever;
@@ -53,9 +66,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        setupRV(this, recyclerView);
+        setSupportActionBar(toolbar);
+        //getSupportActionBar().setHideOnContentScrollEnabled(true);
+        getSupportActionBar().setShowHideAnimationEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.mipmap.ic_launcher);
+        setupRV(recyclerView);
         setupSwipeToRefresh(swipeContainer);
         broadcastReciever = new LayoutChangeBroadcastReciever();
+        //fetchTimelineAsync();
     }
 
     @Override
@@ -69,6 +88,30 @@ public class MainActivity extends AppCompatActivity {
     protected void onPause(){
         super.onPause();
         LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReciever);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                //NavUtils.navigateUpFromSameTask(this);
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(layoutManager instanceof GridLayoutManager)
+            super.onBackPressed();
+        else{
+            adapter.setIsGridLayout(true);
+            layoutManager = new GridLayoutManager(this,GRID_LAYOUT_SPAN_COUNT);
+            updateRV(recyclerView,layoutManager,adapter);
+            recyclerView.scrollToPosition(recyclerView.getChildAdapterPosition(recyclerView.getFocusedChild()));
+        }
     }
 
     private void setupSwipeToRefresh(SwipeRefreshLayout swipeContainer) {
@@ -88,15 +131,39 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void setupRV(Context context, RecyclerView recyclerView) {
+    private void setupRV(RecyclerView recyclerView) {
         if(adapter == null){
             adapter = new InstagramAdapter(this,true);
         }
         if(layoutManager == null){
-            layoutManager = new GridLayoutManager(context,GRID_LAYOUT_SPAN_COUNT);//new LinearLayoutManager(context);
+            setGridLayout();
         }
 
-        updateRV(recyclerView,layoutManager, adapter);
+        recyclerView.addOnScrollListener(new RVScrollListener() {
+            @Override
+            public void onHide() {
+                getSupportActionBar().hide();
+                //toolbarContainer.animate().translationY(-toolbar.getHeight()).setInterpolator(new AccelerateInterpolator(2));
+            }
+
+            @Override
+            public void onShow() {
+                getSupportActionBar().show();
+                //toolbarContainer.animate().translationY(0).setInterpolator(new DecelerateInterpolator(2));
+            }
+        });
+
+        updateRV(recyclerView, layoutManager, adapter);
+    }
+
+    private void setLayoutManager(RecyclerView.LayoutManager layoutManager){
+        this.layoutManager = layoutManager;
+    }
+    private void setGridLayout(){
+        setLayoutManager(new GridLayoutManager(this,GRID_LAYOUT_SPAN_COUNT));
+    }
+    private void setLinearLayout(){
+        setLayoutManager(new LinearLayoutManager(this));
     }
 
     private void updateRV(RecyclerView recyclerView, RecyclerView.LayoutManager layoutManager, RecyclerView.Adapter adapter){
@@ -180,6 +247,10 @@ public class MainActivity extends AppCompatActivity {
         public void onReceive(Context context, Intent intent) {
           //inflate fragment but pass adapter data to fragment
             Toast.makeText(MainActivity.this,"intent received",Toast.LENGTH_SHORT).show();
+            adapter.setIsGridLayout(false);
+            setLinearLayout();
+            updateRV(recyclerView,layoutManager, adapter);
+            recyclerView.scrollToPosition(intent.getIntExtra(ITEM_POSITION_EXTRA, 0));
         }
     }
 }

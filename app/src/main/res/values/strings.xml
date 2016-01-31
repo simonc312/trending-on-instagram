@@ -2,4 +2,5 @@
     <string name="app_name">Trending On Instagram</string>
     <string name="client_id">e05c462ebd86446ea48a5af73769b602</string>
     <string name="action_layout_change">ACTION_LAYOUT_CHANGE</string>
+    <string name="item_position_extra">ITEM_POSITION_EXTRA</string>
 </resources>

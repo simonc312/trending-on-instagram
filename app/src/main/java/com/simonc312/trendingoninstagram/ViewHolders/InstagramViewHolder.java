@@ -1,9 +1,11 @@
-package com.simonc312.trendingoninstagram;
+package com.simonc312.trendingoninstagram.ViewHolders;
 
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+
+import com.simonc312.trendingoninstagram.R;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -11,7 +13,7 @@ import butterknife.ButterKnife;
 /**
  * Created by Simon on 1/26/2016.
  */
-class InstagramViewHolder extends GridViewHolder {
+public class InstagramViewHolder extends GridViewHolder {
 
     @Bind(R.id.iv_profile)
     ImageView iv_profile;
@@ -26,7 +28,7 @@ class InstagramViewHolder extends GridViewHolder {
 
     public InstagramViewHolder(View itemView) {
         super(itemView);
-        ButterKnife.bind(this,itemView);
+        ButterKnife.bind(this, itemView);
     }
 
     public void setLikes(String likes) {
@@ -42,11 +44,16 @@ class InstagramViewHolder extends GridViewHolder {
     }
 
     public void setProfileImage(String src){
-        setImageHelper(src,iv_profile);
+        setImageHelper(src, iv_profile);
     }
 
     public void setCaption(String caption) {
         tv_caption.setText(caption);
+    }
+
+    @Override
+    public void onClick(View view){
+        //super.onClick(view);
     }
 
 

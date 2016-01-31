@@ -1,12 +1,15 @@
-package com.simonc312.trendingoninstagram;
+package com.simonc312.trendingoninstagram.Adapters;
 
 import android.content.Context;
-import android.content.Intent;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.simonc312.trendingoninstagram.Models.InstagramPostData;
+import com.simonc312.trendingoninstagram.R;
+import com.simonc312.trendingoninstagram.ViewHolders.GridViewHolder;
+import com.simonc312.trendingoninstagram.ViewHolders.InstagramViewHolder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +18,7 @@ import java.util.List;
 /**
  * Created by Simon on 1/26/2016.
  */
-public class InstagramAdapter extends RecyclerView.Adapter<GridViewHolder> implements View.OnClickListener{
+public class InstagramAdapter extends RecyclerView.Adapter<GridViewHolder>{
     private Context mContext;
     private boolean isGridLayout;
     private List<InstagramPostData> postDataList;
@@ -23,7 +26,6 @@ public class InstagramAdapter extends RecyclerView.Adapter<GridViewHolder> imple
 
     public InstagramAdapter(Context context, boolean isGridLayout){
         postDataList = new ArrayList<>();
-        postDataList.add(new InstagramPostData());
         this.mContext = context;
         this.isGridLayout = isGridLayout;
     }
@@ -32,7 +34,6 @@ public class InstagramAdapter extends RecyclerView.Adapter<GridViewHolder> imple
     public GridViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         int layoutID = isGridLayout ? R.layout.rv_grid_item : R.layout.rv_item;
         View view = LayoutInflater.from(mContext).inflate(layoutID, parent, false);
-        view.setOnClickListener(this);
         return isGridLayout ? new GridViewHolder(view) : new InstagramViewHolder(view);
     }
 
@@ -68,13 +69,5 @@ public class InstagramAdapter extends RecyclerView.Adapter<GridViewHolder> imple
 
     public void setIsGridLayout(boolean isGridLayout){
         this.isGridLayout = isGridLayout;
-    }
-
-    @Override
-    public void onClick(View v) {
-        if(isGridLayout) {
-            Intent intent = new Intent(mContext.getString(R.string.action_layout_change));
-            LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
-        }
     }
 }
