@@ -2,6 +2,7 @@ package com.simonc312.trendingoninstagram;
 
 import static android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 
+import android.app.SearchManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -23,6 +24,7 @@ import android.widget.Toast;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.simonc312.trendingoninstagram.Adapters.InstagramAdapter;
+import com.simonc312.trendingoninstagram.Api.ApiRequestInterface;
 import com.simonc312.trendingoninstagram.Api.InstagramApiHandler;
 import com.simonc312.trendingoninstagram.Api.TagNameSearchApiRequest;
 import com.simonc312.trendingoninstagram.Api.TagSearchApiRequest;
@@ -66,15 +68,29 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        setupSupportActionBar();
+        setupRV(recyclerView);
+        setupSwipeToRefresh(swipeContainer);
+        broadcastReciever = new LayoutChangeBroadcastReciever();
+        //fetchTimelineAsync();
+        handleSearchIntent(getIntent());
+
+    }
+
+    private void setupSupportActionBar(){
         setSupportActionBar(toolbar);
         //getSupportActionBar().setHideOnContentScrollEnabled(true);
         getSupportActionBar().setShowHideAnimationEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.mipmap.ic_launcher);
-        setupRV(recyclerView);
-        setupSwipeToRefresh(swipeContainer);
-        broadcastReciever = new LayoutChangeBroadcastReciever();
-        //fetchTimelineAsync();
+    }
+
+    private void handleSearchIntent(Intent intent) {
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            Toast.makeText(this,query,Toast.LENGTH_SHORT);
+            fetchTagNameSearchAsync(query);
+        }
     }
 
     @Override
@@ -196,7 +212,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void fetchTimelineAsync() {
         /*InstagramApiHandler handler = InstagramApiHandler.getInstance();
-        handler.sendRequest(new PopularApiRequest(this));*/
+        sendRequest(new PopularApiRequest(this));*/
         String url = "https://api.instagram.com/v1/media/popular?client_id="+CLIENT_ID;
 
         AsyncHttpClient client = new AsyncHttpClient();
@@ -222,12 +238,16 @@ public class MainActivity extends AppCompatActivity {
     private void fetchTagNameSearchAsync(String tag){
         TagNameSearchApiRequest request = new TagNameSearchApiRequest(this);
         request.setTag(tag);
-        //handler.sendRequest(request);
+        sendRequest(request);
     }
     private void fetchTagSearchAsync(String query){
-        InstagramApiHandler handler = InstagramApiHandler.getInstance();
         TagSearchApiRequest request = new TagSearchApiRequest(this);
         request.setQuery(query);
+        sendRequest(request);
+    }
+
+    private void sendRequest(ApiRequestInterface request){
+        InstagramApiHandler handler = InstagramApiHandler.getInstance();
         handler.sendRequest(request);
     }
 

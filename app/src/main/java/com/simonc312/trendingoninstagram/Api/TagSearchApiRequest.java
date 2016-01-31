@@ -35,7 +35,7 @@ public class TagSearchApiRequest extends AbstractApiRequest {
 
     @Override
     public void processOnFailure(String response) {
-        Toast.makeText(context,"tag search on failure",Toast.LENGTH_SHORT).show();
+        Toast.makeText(context,"tag search on failure "+response,Toast.LENGTH_SHORT).show();
     }
 }
 

@@ -1,6 +1,7 @@
 package com.simonc312.trendingoninstagram.Api;
 
 import android.content.Context;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.loopj.android.http.RequestParams;
@@ -31,12 +32,13 @@ public class TagNameSearchApiRequest extends AbstractApiRequest {
     public void processOnSuccess(JSONObject jsonResponse) {
         //attach parsed data object or collection in broadcase (must make objects Parseable)
         //LocalBroadcastManager.getInstance(context).sendBroadcast();
-        Toast.makeText(context,"tag search on success",Toast.LENGTH_SHORT).show();
+        Toast.makeText(context,"tag name search on success",Toast.LENGTH_SHORT).show();
+        Log.d("Json Response", jsonResponse.toString());
     }
 
     @Override
     public void processOnFailure(String response) {
-        Toast.makeText(context,"tag search on failure",Toast.LENGTH_SHORT).show();
+        Toast.makeText(context,"tag name search on failure "+ response,Toast.LENGTH_SHORT).show();
     }
 }
 

@@ -3,4 +3,5 @@
     <string name="client_id">e05c462ebd86446ea48a5af73769b602</string>
     <string name="action_layout_change">ACTION_LAYOUT_CHANGE</string>
     <string name="item_position_extra">ITEM_POSITION_EXTRA</string>
+    <string name="search_hint">Search for users or tags</string>
 </resources>
