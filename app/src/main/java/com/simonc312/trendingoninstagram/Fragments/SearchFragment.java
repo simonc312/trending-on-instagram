@@ -1,9 +1,13 @@
 package com.simonc312.trendingoninstagram.Fragments;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,7 +17,6 @@ import android.widget.Toast;
 
 import com.simonc312.trendingoninstagram.Adapters.SearchAdapter;
 import com.simonc312.trendingoninstagram.Api.AbstractApiRequest.RequestListener;
-import com.simonc312.trendingoninstagram.Api.ApiRequestInterface;
 import com.simonc312.trendingoninstagram.Api.InstagramApiHandler;
 import com.simonc312.trendingoninstagram.Api.TagSearchApiRequest;
 import com.simonc312.trendingoninstagram.Models.SearchTag;
@@ -27,6 +30,9 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindString;
+import butterknife.ButterKnife;
+
 /**
  * A fragment representing a list of Items.
  * <p>
@@ -35,8 +41,11 @@ import java.util.List;
  */
 public class SearchFragment extends Fragment {
 
+    @BindString(R.string.action_query_changed) String ACTION_QUERY_CHANGED;
     private InteractionListener mListener;
     private SearchAdapter adapter;
+    private static String DEFAULT_QUERY = "photo";
+    private SearchQueryChangeReceiver receiver;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -48,7 +57,6 @@ public class SearchFragment extends Fragment {
     public static SearchFragment newInstance() {
         SearchFragment fragment = new SearchFragment();
         Bundle args = new Bundle();
-        //args.putInt(ARG_COLUMN_COUNT, columnCount);
         fragment.setArguments(args);
         return fragment;
     }
@@ -56,29 +64,41 @@ public class SearchFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        receiver = new SearchQueryChangeReceiver();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_search_item_list, container, false);
-
+        ButterKnife.bind(this, view);
         // Set the adapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
-            ArrayList<SearchTag> test = new ArrayList<>();
             RecyclerView recyclerView = (RecyclerView) view;
-            adapter = new SearchAdapter(test, mListener);
+            adapter = new SearchAdapter( new ArrayList<SearchTag>(), mListener);
             recyclerView.setLayoutManager(new LinearLayoutManager(context));
             Drawable drawable = getActivity().getResources().getDrawable(android.R.drawable.divider_horizontal_bright);
             recyclerView.addItemDecoration(new HorizontalDividerItemDecoration(drawable));
             recyclerView.setAdapter(adapter);
         }
-        fetchTagSearchAsync("photo");
+        fetchTagSearchAsync(DEFAULT_QUERY);
 
         return view;
     }
 
+    @Override
+    public void onStart(){
+        super.onStart();
+        IntentFilter filter = new IntentFilter(ACTION_QUERY_CHANGED);
+        LocalBroadcastManager.getInstance(getContext()).registerReceiver(receiver, filter);
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(receiver);
+    }
 
     @Override
     public void onAttach(Context context) {
@@ -136,5 +156,15 @@ public class SearchFragment extends Fragment {
      */
     public interface InteractionListener {
         void onListFragmentInteraction(String query);
+    }
+
+    private class SearchQueryChangeReceiver extends BroadcastReceiver{
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if(intent != null){
+                String newQuery = intent.getStringExtra("query");
+                fetchTagSearchAsync(newQuery);
+            }
+        }
     }
 }

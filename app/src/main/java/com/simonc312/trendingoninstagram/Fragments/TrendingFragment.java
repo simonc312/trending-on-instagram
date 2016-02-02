@@ -146,13 +146,13 @@ public class TrendingFragment extends Fragment
     @Override
     public void onSuccess(JSONObject response) {
         handleSuccessResponse(response);
-        swipeContainer.setRefreshing(false);
+        stopRefresh();
     }
 
     @Override
     public void onFailure(String response) {
         handleErrorResponse(response);
-        swipeContainer.setRefreshing(false);
+        stopRefresh();
     }
 
     /**
@@ -190,6 +190,12 @@ public class TrendingFragment extends Fragment
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
+    }
+
+    private void stopRefresh(){
+        if(swipeContainer != null){
+            swipeContainer.setRefreshing(false);
+        }
     }
 
     private void fetchAsync() {

@@ -32,7 +32,7 @@ import butterknife.ButterKnife;
 public class MainActivity extends AppCompatActivity
         implements TrendingFragment.InteractionListener,
         SearchFragment.InteractionListener {
-
+    @BindString(R.string.action_query_changed) String ACTION_QUERY_CHANGED;
     @BindString(R.string.action_back_pressed)String ACTION_BACK_PRESSED;
     @Bind(R.id.toolbar)
     Toolbar toolbar;
@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity
         ButterKnife.bind(this);
         setupSupportActionBar();
         broadcastReciever = new LayoutChangeBroadcastReciever();
-        swapFragment(TrendingFragment.newInstance(true,null));
+        swapFragment(TrendingFragment.newInstance(true, null));
 
     }
 
@@ -101,7 +101,6 @@ public class MainActivity extends AppCompatActivity
         searchView.setQueryHint("Search users or tags");
         // set the searchable configuration
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        // Assumes current activity is the searchable activity
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -112,6 +111,12 @@ public class MainActivity extends AppCompatActivity
 
             @Override
             public boolean onQueryTextChange(String newText) {
+                //min query length to update
+                if(newText.length() >= 2){
+                    Intent intent = new Intent(ACTION_QUERY_CHANGED);
+                    intent.putExtra("query",newText);
+                    LocalBroadcastManager.getInstance(MainActivity.this).sendBroadcast(intent);
+                }
                 return false;
             }
         });
