@@ -97,11 +97,6 @@ public class SearchFragment extends Fragment {
         mListener = null;
     }
 
-    private void fetchTagNameSearchAsync(String tag){
-        /*TagNameSearchApiRequest request = new TagNameSearchApiRequest(this);
-        request.setTag(tag);
-        sendRequest(request);*/
-    }
     private void fetchTagSearchAsync(String query){
         TagSearchApiRequest request = new TagSearchApiRequest(getContext(), new RequestListener() {
             @Override
@@ -129,13 +124,9 @@ public class SearchFragment extends Fragment {
             }
         });
         request.setQuery(query);
-        sendRequest(request);
+        InstagramApiHandler.getInstance().sendRequest(request);
     }
 
-    private void sendRequest(ApiRequestInterface request){
-        InstagramApiHandler handler = InstagramApiHandler.getInstance();
-        handler.sendRequest(request);
-    }
 
     /**
      * This interface must be implemented by activities that contain this

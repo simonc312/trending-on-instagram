@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity
         ButterKnife.bind(this);
         setupSupportActionBar();
         broadcastReciever = new LayoutChangeBroadcastReciever();
-        swapFragment(TrendingFragment.newInstance(true));
+        swapFragment(TrendingFragment.newInstance(true,null));
 
     }
 

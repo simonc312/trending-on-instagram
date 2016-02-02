@@ -16,12 +16,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.JsonHttpResponseHandler;
 import com.simonc312.trendingoninstagram.Adapters.TrendingAdapter;
 import com.simonc312.trendingoninstagram.Api.AbstractApiRequest;
 import com.simonc312.trendingoninstagram.Api.InstagramApiHandler;
 import com.simonc312.trendingoninstagram.Api.PopularApiRequest;
+import com.simonc312.trendingoninstagram.Api.TagNameSearchApiRequest;
 import com.simonc312.trendingoninstagram.Models.InstagramPostData;
 import com.simonc312.trendingoninstagram.R;
 import com.simonc312.trendingoninstagram.StyleHelpers.GridItemDecoration;
@@ -35,7 +34,6 @@ import butterknife.Bind;
 import butterknife.BindInt;
 import butterknife.BindString;
 import butterknife.ButterKnife;
-import cz.msebera.android.httpclient.Header;
 
 
 /**
@@ -44,15 +42,15 @@ import cz.msebera.android.httpclient.Header;
  * {@link InteractionListener} interface
  * to handle interaction events.
  */
-public class TrendingFragment extends Fragment implements TrendingAdapter.PostItemListener {
+public class TrendingFragment extends Fragment
+        implements TrendingAdapter.PostItemListener,
+        AbstractApiRequest.RequestListener{
     @BindInt(R.integer.grid_layout_span_count)
     int GRID_LAYOUT_SPAN_COUNT;
     @BindInt(R.integer.grid_layout_item_spacing)
     int GRID_LAYOUT_ITEM_SPACING;
     @BindString(R.string.action_back_pressed)
     String ACTION_BACK_PRESSED;
-    @BindString(R.string.client_id)
-    String CLIENT_ID;
     @Bind(R.id.swipeContainer)
     SwipeRefreshLayout swipeContainer;
     @Bind(R.id.rvItems)
@@ -64,14 +62,16 @@ public class TrendingFragment extends Fragment implements TrendingAdapter.PostIt
     private RecyclerView.LayoutManager layoutManager;
     private boolean useGridLayout;
     private RecyclerView.ItemDecoration itemDecoration;
+    private String query;
 
     public TrendingFragment() {
         // Required empty public constructor
     }
 
-    public static TrendingFragment newInstance(boolean useGridLayout){
+    public static TrendingFragment newInstance(boolean useGridLayout,String query){
         Bundle bundle = new Bundle();
         bundle.putBoolean("useGridLayout",useGridLayout);
+        bundle.putString("query",query);
         TrendingFragment fragment = new TrendingFragment();
         fragment.setArguments(bundle);
         return fragment;
@@ -91,6 +91,7 @@ public class TrendingFragment extends Fragment implements TrendingAdapter.PostIt
         ButterKnife.bind(this, view);
         setupRV(recyclerView, getContext());
         setupSwipeToRefresh(swipeContainer);
+        fetchAsync();
         return view;
     }
 
@@ -142,6 +143,18 @@ public class TrendingFragment extends Fragment implements TrendingAdapter.PostIt
         }
     }
 
+    @Override
+    public void onSuccess(JSONObject response) {
+        handleSuccessResponse(response);
+        swipeContainer.setRefreshing(false);
+    }
+
+    @Override
+    public void onFailure(String response) {
+        handleErrorResponse(response);
+        swipeContainer.setRefreshing(false);
+    }
+
     /**
      * When back button is pressed and fragment is visible, if linear layout revert to grid layout
      and scroll to current position
@@ -160,6 +173,7 @@ public class TrendingFragment extends Fragment implements TrendingAdapter.PostIt
     private void handleArguments(Bundle bundle) {
         if(!bundle.isEmpty()){
             useGridLayout = bundle.getBoolean("useGridLayout");
+            query = bundle.getString("query");
         }
     }
 
@@ -167,7 +181,7 @@ public class TrendingFragment extends Fragment implements TrendingAdapter.PostIt
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                fetchTimelineAsync();
+                fetchAsync();
             }
         });
         // Configure the refreshing colors
@@ -176,6 +190,13 @@ public class TrendingFragment extends Fragment implements TrendingAdapter.PostIt
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
+    }
+
+    private void fetchAsync() {
+        if(query == null)
+            fetchTimelineAsync();
+        else
+            fetchTagNameSearchAsync(query);
     }
 
     private void setupRV(RecyclerView recyclerView, Context context) {
@@ -230,36 +251,13 @@ public class TrendingFragment extends Fragment implements TrendingAdapter.PostIt
 
     private void fetchTimelineAsync() {
         InstagramApiHandler handler = InstagramApiHandler.getInstance();
-        handler.sendRequest(new PopularApiRequest(getContext(), new AbstractApiRequest.RequestListener() {
-            @Override
-            public void onSuccess(JSONObject response) {
-                handleSuccessResponse(response);
-                swipeContainer.setRefreshing(false);
-            }
+        handler.sendRequest(new PopularApiRequest(getContext(),this));
+    }
 
-            @Override
-            public void onFailure(String response) {
-                handleErrorResponse(response);
-                swipeContainer.setRefreshing(false);
-            }
-        }));
-        /*String url = "https://api.instagram.com/v1/media/popular?client_id="+CLIENT_ID;
-
-        AsyncHttpClient client = new AsyncHttpClient();
-        client.get(url, new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                // Root JSON in response is an dictionary i.e { "data : [ ... ] }
-                // Handle resulting parsed JSON response here
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String res, Throwable t) {
-                // called when response HTTP status is "4XX" (eg. 401, 403, 404)
-
-            }
-        });*/
-
+    private void fetchTagNameSearchAsync(String tag){
+        TagNameSearchApiRequest request = new TagNameSearchApiRequest(getContext(),this);
+        request.setTag(tag);
+        InstagramApiHandler.getInstance().sendRequest(request);
     }
 
     private void handleSuccessResponse(JSONObject response) {

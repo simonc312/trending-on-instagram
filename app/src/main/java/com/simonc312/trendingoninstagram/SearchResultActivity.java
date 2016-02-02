@@ -37,7 +37,7 @@ public class SearchResultActivity extends AppCompatActivity implements TrendingF
         handleSearchIntent(getIntent());
         setupSupportActionBar();
         broadcastReciever = new LayoutChangeBroadcastReciever();
-        swapFragment(TrendingFragment.newInstance(true));
+        swapFragment(TrendingFragment.newInstance(true,TITLE));
 
     }
 
@@ -52,7 +52,7 @@ public class SearchResultActivity extends AppCompatActivity implements TrendingF
         //getSupportActionBar().setHideOnContentScrollEnabled(true);
         getSupportActionBar().setShowHideAnimationEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setTitle(TITLE);
+        getSupportActionBar().setTitle(String.format("#%s",TITLE));
     }
 
     private void handleSearchIntent(Intent intent) {
