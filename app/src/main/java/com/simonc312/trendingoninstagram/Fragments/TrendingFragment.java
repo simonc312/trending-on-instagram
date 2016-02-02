@@ -60,7 +60,6 @@ public class TrendingFragment extends Fragment
     private InteractionListener mListener;
     private BackPressedBroadcastListener backPressedListener;
     private TrendingAdapter adapter;
-    private RecyclerView.LayoutManager layoutManager;
     private boolean useGridLayout;
     private RecyclerView.ItemDecoration itemDecoration;
     private String query;
@@ -71,7 +70,7 @@ public class TrendingFragment extends Fragment
 
     public static TrendingFragment newInstance(boolean useGridLayout,String query){
         Bundle bundle = new Bundle();
-        bundle.putBoolean("useGridLayout",useGridLayout);
+        bundle.putBoolean("useGridLayout", useGridLayout);
         bundle.putString("query",query);
         TrendingFragment fragment = new TrendingFragment();
         fragment.setArguments(bundle);
@@ -138,8 +137,7 @@ public class TrendingFragment extends Fragment
             useGridLayout = false;
             mListener.onLayoutChange(true);
             adapter.setIsGridLayout(false);
-            setLinearLayout();
-            updateRV(recyclerView, layoutManager, adapter);
+            updateRV(recyclerView, getLinearLayout(), adapter);
             recyclerView.scrollToPosition(position);
         }
     }
@@ -165,15 +163,17 @@ public class TrendingFragment extends Fragment
             useGridLayout = true;
             mListener.onLayoutChange(false);
             adapter.setIsGridLayout(true);
-            setGridLayout();
-            updateRV(recyclerView,layoutManager,adapter);
+            getGridLayout();
+            updateRV(recyclerView,getLayout(),adapter);
             recyclerView.scrollToPosition(recyclerView.getChildAdapterPosition(recyclerView.getFocusedChild()));
+        } else {
+            mListener.onBackPress(true);
         }
     }
 
     private void handleArguments(Bundle bundle) {
         if(!bundle.isEmpty()){
-            useGridLayout = bundle.getBoolean("useGridLayout");
+            useGridLayout = bundle.getBoolean("useGridLayout",true);
             query = bundle.getString("query");
         }
     }
@@ -210,12 +210,6 @@ public class TrendingFragment extends Fragment
         if(adapter == null){
             adapter = new TrendingAdapter(context,useGridLayout,this);
         }
-        if(layoutManager == null){
-            if(useGridLayout)
-                setGridLayout();
-            else
-                setLinearLayout();
-        }
 
         if(itemDecoration == null){
             itemDecoration = new GridItemDecoration(GRID_LAYOUT_SPAN_COUNT,GRID_LAYOUT_ITEM_SPACING,false);
@@ -240,17 +234,21 @@ public class TrendingFragment extends Fragment
             }
         });
 
-        updateRV(recyclerView, layoutManager, adapter);
+        updateRV(recyclerView, getLayout(), adapter);
     }
 
-    private void setLayoutManager(RecyclerView.LayoutManager layoutManager){
-        this.layoutManager = layoutManager;
+    private RecyclerView.LayoutManager getLayout(){
+        if(useGridLayout)
+            return getGridLayout();
+        else
+           return getLinearLayout();
     }
-    private void setGridLayout(){
-        setLayoutManager(new GridLayoutManager(getContext(), GRID_LAYOUT_SPAN_COUNT));
+
+    private GridLayoutManager getGridLayout(){
+        return new GridLayoutManager(getContext(), GRID_LAYOUT_SPAN_COUNT);
     }
-    private void setLinearLayout(){
-        setLayoutManager(new LinearLayoutManager(getContext()));
+    private LinearLayoutManager getLinearLayout(){
+        return new LinearLayoutManager(getContext());
     }
 
     private void updateRV(RecyclerView recyclerView, RecyclerView.LayoutManager layoutManager, RecyclerView.Adapter adapter){
@@ -319,6 +317,8 @@ public class TrendingFragment extends Fragment
         void onScrollUp();
 
         void onLayoutChange(boolean show);
+
+        void onBackPress(boolean pop);
     }
 
     private class BackPressedBroadcastListener extends BroadcastReceiver{

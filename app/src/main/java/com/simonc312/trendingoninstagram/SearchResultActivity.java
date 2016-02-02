@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -49,10 +50,11 @@ public class SearchResultActivity extends AppCompatActivity implements TrendingF
 
     private void setupSupportActionBar(){
         setSupportActionBar(toolbar);
-        //getSupportActionBar().setHideOnContentScrollEnabled(true);
-        getSupportActionBar().setShowHideAnimationEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setTitle(String.format("#%s",TITLE));
+        final ActionBar actionBar = getSupportActionBar();
+        actionBar.setShowHideAnimationEnabled(true);
+        actionBar.setDisplayShowHomeEnabled(true);
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setTitle(String.format("#%s", TITLE));
     }
 
     private void handleSearchIntent(Intent intent) {
@@ -80,7 +82,6 @@ public class SearchResultActivity extends AppCompatActivity implements TrendingF
     public void onBackPressed(){
         if(getSupportFragmentManager().getBackStackEntryCount() > 0){
             LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(ACTION_BACK_PRESSED));
-            //getSupportFragmentManager().popBackStack();
         }
         else {
             super.onBackPressed();
@@ -123,7 +124,15 @@ public class SearchResultActivity extends AppCompatActivity implements TrendingF
 
     @Override
     public void onLayoutChange(boolean show) {
-        getSupportActionBar().setDisplayHomeAsUpEnabled(show);
+        // always keep support action bar displayed because its not the parent activity unlike Main
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(show);
+    }
+
+    @Override
+    public void onBackPress(boolean pop){
+        if(pop){
+            finish();
+        }
     }
 
     private class LayoutChangeBroadcastReciever extends BroadcastReceiver{

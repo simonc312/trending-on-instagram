@@ -19,7 +19,6 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 
-import com.simonc312.trendingoninstagram.Fragments.SearchFragment;
 import com.simonc312.trendingoninstagram.Fragments.TrendingFragment;
 
 
@@ -30,9 +29,7 @@ import butterknife.ButterKnife;
 
 
 public class MainActivity extends AppCompatActivity
-        implements TrendingFragment.InteractionListener,
-        SearchFragment.InteractionListener {
-    @BindString(R.string.action_query_changed) String ACTION_QUERY_CHANGED;
+        implements TrendingFragment.InteractionListener{
     @BindString(R.string.action_back_pressed)String ACTION_BACK_PRESSED;
     @Bind(R.id.toolbar)
     Toolbar toolbar;
@@ -74,7 +71,6 @@ public class MainActivity extends AppCompatActivity
     public void onBackPressed(){
         if(getSupportFragmentManager().getBackStackEntryCount() > 0){
             LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(ACTION_BACK_PRESSED));
-            //getSupportFragmentManager().popBackStack();
         }
         else {
             super.onBackPressed();
@@ -89,7 +85,8 @@ public class MainActivity extends AppCompatActivity
                 onBackPressed();
                 return true;
             case R.id.action_search:
-                swapFragment(SearchFragment.newInstance());
+                startActivity(new Intent(this,SearchQueryActivity.class));
+                return false;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -97,30 +94,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.search_menu, menu);
-        searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
-        searchView.setQueryHint("Search users or tags");
-        // set the searchable configuration
-        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                //min query length to update
-                if(newText.length() >= 2){
-                    Intent intent = new Intent(ACTION_QUERY_CHANGED);
-                    intent.putExtra("query",newText);
-                    LocalBroadcastManager.getInstance(MainActivity.this).sendBroadcast(intent);
-                }
-                return false;
-            }
-        });
-
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -148,9 +121,9 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onListFragmentInteraction(String query) {
-        if(searchView != null){
-            searchView.setQuery(query,true);
+    public void onBackPress(boolean pop){
+        if(pop){
+            finish();
         }
     }
 
