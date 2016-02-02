@@ -63,6 +63,8 @@ public class TrendingFragment extends Fragment
     private boolean useGridLayout;
     private RecyclerView.ItemDecoration itemDecoration;
     private String query;
+    //determines where to add new posts
+    private boolean addToEnd = false;
 
     public TrendingFragment() {
         // Required empty public constructor
@@ -182,6 +184,7 @@ public class TrendingFragment extends Fragment
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                addToEnd = false;
                 fetchAsync();
             }
         });
@@ -218,6 +221,7 @@ public class TrendingFragment extends Fragment
         recyclerView.addOnScrollListener(new EndlessRVScrollListener() {
             @Override
             public void onLoadMore(int current_page) {
+                addToEnd = true;
                 fetchAsync();
             }
         });
@@ -291,9 +295,10 @@ public class TrendingFragment extends Fragment
                     String timePosted = data.getString("created_time");
                     JSONArray comments = data.getJSONObject("comments").getJSONArray("data");
                     InstagramPostData postData = new InstagramPostData(username, profileImageSource, likeCount, timePosted, caption, imageSource);
-                    adapter.addPost(postData);
+                    adapter.addPost(postData, addToEnd);
                 }
             }
+
         } catch (JSONException e) {
             e.printStackTrace();
         }

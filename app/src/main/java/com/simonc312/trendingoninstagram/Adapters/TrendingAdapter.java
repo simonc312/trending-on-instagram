@@ -59,9 +59,17 @@ public class TrendingAdapter extends RecyclerView.Adapter<GridViewHolder>{
         return postDataList.size();
     }
 
-    public void addPost(InstagramPostData post){
-        postDataList.add(post);
-        notifyItemInserted(postDataList.size()-1);
+    public void addPost(InstagramPostData post, boolean addToEnd){
+        if(addToEnd){
+            addPost(post,postDataList.size());
+        } else{
+            addPost(post,0);
+        }
+    }
+
+    private void addPost(InstagramPostData post, int position){
+        postDataList.add(position,post);
+        notifyItemInserted(position);
     }
 
     public void addPosts(List<InstagramPostData> posts){
