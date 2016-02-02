@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.simonc312.trendingoninstagram.Fragments.SearchFragment.SearchFragmentInteractionListener;
+import com.simonc312.trendingoninstagram.Fragments.SearchFragment.InteractionListener;
 import com.simonc312.trendingoninstagram.Models.SearchTag;
 import com.simonc312.trendingoninstagram.R;
 
@@ -14,14 +14,14 @@ import java.util.List;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link SearchTag} and makes a call to the
- * specified {@link SearchFragmentInteractionListener}.
+ * specified {@link InteractionListener}.
  */
 public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder> {
 
-    private final List<SearchTag> mValues;
-    private final SearchFragmentInteractionListener mListener;
+    private List<SearchTag> mValues;
+    private final InteractionListener mListener;
 
-    public SearchAdapter(List<SearchTag> items, SearchFragmentInteractionListener listener) {
+    public SearchAdapter(List<SearchTag> items, InteractionListener listener) {
         mValues = items;
         mListener = listener;
     }
@@ -51,6 +51,11 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
         notifyItemInserted(0);
     }
 
+    public void update(List<SearchTag> newList) {
+        mValues = newList;
+        notifyDataSetChanged();
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public final View mView;
         public final TextView mIdView;
@@ -72,7 +77,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
 
         @Override
         public void onClick(View v) {
-            mListener.onListFragmentInteraction(mItem);
+            mListener.onListFragmentInteraction(mItem.getName());
         }
     }
 }

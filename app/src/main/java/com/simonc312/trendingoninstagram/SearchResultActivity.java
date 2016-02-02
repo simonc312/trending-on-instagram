@@ -1,53 +1,50 @@
 package com.simonc312.trendingoninstagram;
 
-import android.support.v4.app.Fragment;
-
 import android.app.SearchManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.support.v4.content.LocalBroadcastManager;
-
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-
-import android.support.v7.widget.SearchView;
+import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-
-import com.simonc312.trendingoninstagram.Fragments.SearchFragment;
 import com.simonc312.trendingoninstagram.Fragments.TrendingFragment;
 
-
 import butterknife.Bind;
-
 import butterknife.BindString;
 import butterknife.ButterKnife;
 
 
-public class MainActivity extends AppCompatActivity
-        implements TrendingFragment.InteractionListener,
-        SearchFragment.InteractionListener {
+public class SearchResultActivity extends AppCompatActivity implements TrendingFragment.InteractionListener {
 
     @BindString(R.string.action_back_pressed)String ACTION_BACK_PRESSED;
     @Bind(R.id.toolbar)
     Toolbar toolbar;
+    private String TITLE;
     private LayoutChangeBroadcastReciever broadcastReciever;
-    private SearchView searchView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        handleSearchIntent(getIntent());
         setupSupportActionBar();
         broadcastReciever = new LayoutChangeBroadcastReciever();
         swapFragment(TrendingFragment.newInstance(true));
 
+    }
+
+    @Override
+    public void onNewIntent(Intent intent){
+        setIntent(intent);
+        handleSearchIntent(intent);
     }
 
     private void setupSupportActionBar(){
@@ -55,6 +52,15 @@ public class MainActivity extends AppCompatActivity
         //getSupportActionBar().setHideOnContentScrollEnabled(true);
         getSupportActionBar().setShowHideAnimationEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setTitle(TITLE);
+    }
+
+    private void handleSearchIntent(Intent intent) {
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            Toast.makeText(this, query, Toast.LENGTH_SHORT);
+            TITLE = query;
+        }
     }
 
     @Override
@@ -88,34 +94,12 @@ public class MainActivity extends AppCompatActivity
             case android.R.id.home:
                 onBackPressed();
                 return true;
-            case R.id.action_search:
-                swapFragment(SearchFragment.newInstance());
         }
         return super.onOptionsItemSelected(item);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.search_menu, menu);
-        searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
-        searchView.setQueryHint("Search users or tags");
-        // set the searchable configuration
-        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        // Assumes current activity is the searchable activity
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                return false;
-            }
-        });
-
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -142,19 +126,12 @@ public class MainActivity extends AppCompatActivity
         getSupportActionBar().setDisplayHomeAsUpEnabled(show);
     }
 
-    @Override
-    public void onListFragmentInteraction(String query) {
-        if(searchView != null){
-            searchView.setQuery(query,true);
-        }
-    }
-
     private class LayoutChangeBroadcastReciever extends BroadcastReceiver{
 
         @Override
         public void onReceive(Context context, Intent intent) {
           //inflate fragment but pass adapter data to fragment
-            Toast.makeText(MainActivity.this, "intent received", Toast.LENGTH_SHORT).show();
+            Toast.makeText(SearchResultActivity.this, "intent received", Toast.LENGTH_SHORT).show();
 
         }
     }

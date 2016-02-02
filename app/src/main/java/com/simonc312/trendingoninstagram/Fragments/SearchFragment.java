@@ -25,16 +25,17 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A fragment representing a list of Items.
  * <p>
- * Activities containing this fragment MUST implement the {@link SearchFragmentInteractionListener}
+ * Activities containing this fragment MUST implement the {@link InteractionListener}
  * interface.
  */
 public class SearchFragment extends Fragment {
 
-    private SearchFragmentInteractionListener mListener;
+    private InteractionListener mListener;
     private SearchAdapter adapter;
 
     /**
@@ -82,12 +83,12 @@ public class SearchFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-       /* if (context instanceof SearchFragmentInteractionListener) {
-            mListener = (SearchFragmentInteractionListener) context;
+        if (context instanceof InteractionListener) {
+            mListener = (InteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement SearchFragmentInteractionListener");
-        }*/
+                    + " must implement InteractionListener");
+        }
     }
 
     @Override
@@ -107,13 +108,15 @@ public class SearchFragment extends Fragment {
             public void onSuccess(JSONObject response) {
                 try {
                     JSONArray dataArray = response.getJSONArray("data");
+                    List<SearchTag> newList = new ArrayList<>(dataArray.length());
                     for(int i=0;i<dataArray.length();i++){
                         JSONObject data = dataArray.getJSONObject(i);
                         String name = data.getString("name");
                         int postCount = data.getInt("media_count");
                         SearchTag tag = new SearchTag(name,postCount);
-                        adapter.addItem(tag);
+                        newList.add(tag);
                     }
+                    adapter.update(newList);
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -140,7 +143,7 @@ public class SearchFragment extends Fragment {
      * to the activity and potentially other fragments contained in that
      * activity.
      */
-    public interface SearchFragmentInteractionListener {
-        void onListFragmentInteraction(SearchTag item);
+    public interface InteractionListener {
+        void onListFragmentInteraction(String query);
     }
 }
