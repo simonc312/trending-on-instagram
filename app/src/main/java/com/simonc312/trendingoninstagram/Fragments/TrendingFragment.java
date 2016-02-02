@@ -23,6 +23,7 @@ import com.simonc312.trendingoninstagram.Api.PopularApiRequest;
 import com.simonc312.trendingoninstagram.Api.TagNameSearchApiRequest;
 import com.simonc312.trendingoninstagram.Models.InstagramPostData;
 import com.simonc312.trendingoninstagram.R;
+import com.simonc312.trendingoninstagram.StyleHelpers.EndlessRVScrollListener;
 import com.simonc312.trendingoninstagram.StyleHelpers.GridItemDecoration;
 import com.simonc312.trendingoninstagram.StyleHelpers.RVScrollListener;
 
@@ -219,6 +220,13 @@ public class TrendingFragment extends Fragment
         if(itemDecoration == null){
             itemDecoration = new GridItemDecoration(GRID_LAYOUT_SPAN_COUNT,GRID_LAYOUT_ITEM_SPACING,false);
         }
+
+        recyclerView.addOnScrollListener(new EndlessRVScrollListener() {
+            @Override
+            public void onLoadMore(int current_page) {
+                fetchAsync();
+            }
+        });
 
         recyclerView.addOnScrollListener(new RVScrollListener() {
             @Override
