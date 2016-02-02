@@ -12,8 +12,8 @@ import org.json.JSONObject;
  */
 public class TagSearchApiRequest extends AbstractApiRequest {
 
-    public TagSearchApiRequest(Context context){
-        super(context);
+    public TagSearchApiRequest(Context context,RequestListener listener){
+        super(context, listener);
     }
 
     public void setQuery(String query){

@@ -14,8 +14,10 @@ public abstract class AbstractApiRequest implements ApiRequestInterface {
     private RequestParams requestParams;
     protected String CLIENT_ID = "e05c462ebd86446ea48a5af73769b602";
     protected Context context;
-    public AbstractApiRequest(Context context){
+    protected RequestListener listener;
+    public AbstractApiRequest(Context context, RequestListener listener){
         this.context = context;
+        this.listener = listener;
         requestParams = new RequestParams();
         requestParams.add("client_id",CLIENT_ID);
     }
@@ -39,13 +41,16 @@ public abstract class AbstractApiRequest implements ApiRequestInterface {
 
     @Override
     public void processOnSuccess(JSONObject jsonResponse) {
-        //attach parsed data object or collection in broadcase (must make objects Parseable)
-        //LocalBroadcastManager.getInstance(context).sendBroadcast();
-        Toast.makeText(context,"abstract on success",Toast.LENGTH_SHORT).show();
+        listener.onSuccess(jsonResponse);
     }
 
     @Override
     public void processOnFailure(String response) {
-        Toast.makeText(context,"abstract on failure",Toast.LENGTH_SHORT).show();
+        listener.onFailure(response);
+    }
+
+    public interface RequestListener{
+        void onSuccess(JSONObject response);
+        void onFailure(String response);
     }
 }

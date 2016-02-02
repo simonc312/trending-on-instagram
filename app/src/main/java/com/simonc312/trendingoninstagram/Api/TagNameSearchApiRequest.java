@@ -14,8 +14,8 @@ import org.json.JSONObject;
 public class TagNameSearchApiRequest extends AbstractApiRequest {
 
     private String tag;
-    public TagNameSearchApiRequest(Context context){
-        super(context);
+    public TagNameSearchApiRequest(Context context, RequestListener listener){
+        super(context, listener);
         tag = "sleepgroper";
     }
 
@@ -30,6 +30,7 @@ public class TagNameSearchApiRequest extends AbstractApiRequest {
 
     @Override
     public void processOnSuccess(JSONObject jsonResponse) {
+        super.processOnSuccess(jsonResponse);
         //attach parsed data object or collection in broadcase (must make objects Parseable)
         //LocalBroadcastManager.getInstance(context).sendBroadcast();
         Toast.makeText(context,"tag name search on success",Toast.LENGTH_SHORT).show();
@@ -38,6 +39,7 @@ public class TagNameSearchApiRequest extends AbstractApiRequest {
 
     @Override
     public void processOnFailure(String response) {
+        super.processOnFailure(response);
         Toast.makeText(context,"tag name search on failure "+ response,Toast.LENGTH_SHORT).show();
     }
 }

@@ -19,6 +19,9 @@ import android.view.ViewGroup;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.simonc312.trendingoninstagram.Adapters.TrendingAdapter;
+import com.simonc312.trendingoninstagram.Api.AbstractApiRequest;
+import com.simonc312.trendingoninstagram.Api.InstagramApiHandler;
+import com.simonc312.trendingoninstagram.Api.PopularApiRequest;
 import com.simonc312.trendingoninstagram.Models.InstagramPostData;
 import com.simonc312.trendingoninstagram.R;
 import com.simonc312.trendingoninstagram.StyleHelpers.GridItemDecoration;
@@ -60,6 +63,7 @@ public class TrendingFragment extends Fragment implements TrendingAdapter.PostIt
     private TrendingAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
     private boolean useGridLayout;
+    private RecyclerView.ItemDecoration itemDecoration;
 
     public TrendingFragment() {
         // Required empty public constructor
@@ -129,6 +133,8 @@ public class TrendingFragment extends Fragment implements TrendingAdapter.PostIt
     @Override
     public void onPostClick(int position){
         if(useGridLayout) {
+            useGridLayout = false;
+            mListener.onLayoutChange(true);
             adapter.setIsGridLayout(false);
             setLinearLayout();
             updateRV(recyclerView, layoutManager, adapter);
@@ -136,22 +142,24 @@ public class TrendingFragment extends Fragment implements TrendingAdapter.PostIt
         }
     }
 
-    private void handleArguments(Bundle bundle) {
-        if(!bundle.isEmpty()){
-            useGridLayout = bundle.getBoolean("useGridLayout");
-        }
-    }
-
     /**
-     * When back button is pressed and fragment is visible, if linear layout revert to linear layout
+     * When back button is pressed and fragment is visible, if linear layout revert to grid layout
      and scroll to current position
      */
     public void onBackPressed() {
         if(!(useGridLayout)){
+            useGridLayout = true;
+            mListener.onLayoutChange(false);
             adapter.setIsGridLayout(true);
             setGridLayout();
             updateRV(recyclerView,layoutManager,adapter);
             recyclerView.scrollToPosition(recyclerView.getChildAdapterPosition(recyclerView.getFocusedChild()));
+        }
+    }
+
+    private void handleArguments(Bundle bundle) {
+        if(!bundle.isEmpty()){
+            useGridLayout = bundle.getBoolean("useGridLayout");
         }
     }
 
@@ -168,8 +176,6 @@ public class TrendingFragment extends Fragment implements TrendingAdapter.PostIt
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
-
-
     }
 
     private void setupRV(RecyclerView recyclerView, Context context) {
@@ -181,6 +187,10 @@ public class TrendingFragment extends Fragment implements TrendingAdapter.PostIt
                 setGridLayout();
             else
                 setLinearLayout();
+        }
+
+        if(itemDecoration == null){
+            itemDecoration = new GridItemDecoration(GRID_LAYOUT_SPAN_COUNT,GRID_LAYOUT_ITEM_SPACING,false);
         }
 
         recyclerView.addOnScrollListener(new RVScrollListener() {
@@ -211,15 +221,29 @@ public class TrendingFragment extends Fragment implements TrendingAdapter.PostIt
     private void updateRV(RecyclerView recyclerView, RecyclerView.LayoutManager layoutManager, RecyclerView.Adapter adapter){
         //need to remove it otherwise
         if(layoutManager instanceof GridLayoutManager)
-            recyclerView.addItemDecoration(new GridItemDecoration(GRID_LAYOUT_SPAN_COUNT,GRID_LAYOUT_ITEM_SPACING,false));
+            recyclerView.addItemDecoration(itemDecoration);
+        else
+            recyclerView.removeItemDecoration(itemDecoration);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
     }
 
     private void fetchTimelineAsync() {
-        /*InstagramApiHandler handler = InstagramApiHandler.getInstance();
-        sendRequest(new PopularApiRequest(this));*/
-        String url = "https://api.instagram.com/v1/media/popular?client_id="+CLIENT_ID;
+        InstagramApiHandler handler = InstagramApiHandler.getInstance();
+        handler.sendRequest(new PopularApiRequest(getContext(), new AbstractApiRequest.RequestListener() {
+            @Override
+            public void onSuccess(JSONObject response) {
+                handleSuccessResponse(response);
+                swipeContainer.setRefreshing(false);
+            }
+
+            @Override
+            public void onFailure(String response) {
+                handleErrorResponse(response);
+                swipeContainer.setRefreshing(false);
+            }
+        }));
+        /*String url = "https://api.instagram.com/v1/media/popular?client_id="+CLIENT_ID;
 
         AsyncHttpClient client = new AsyncHttpClient();
         client.get(url, new JsonHttpResponseHandler() {
@@ -227,17 +251,14 @@ public class TrendingFragment extends Fragment implements TrendingAdapter.PostIt
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 // Root JSON in response is an dictionary i.e { "data : [ ... ] }
                 // Handle resulting parsed JSON response here
-                handleSuccessResponse(response);
-                swipeContainer.setRefreshing(false);
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, String res, Throwable t) {
                 // called when response HTTP status is "4XX" (eg. 401, 403, 404)
-                handleErrorResponse(res);
-                swipeContainer.setRefreshing(false);
+
             }
-        });
+        });*/
 
     }
 
@@ -284,6 +305,8 @@ public class TrendingFragment extends Fragment implements TrendingAdapter.PostIt
         void onScrollDown();
 
         void onScrollUp();
+
+        void onLayoutChange(boolean show);
     }
 
     private class BackPressedBroadcastListener extends BroadcastReceiver{

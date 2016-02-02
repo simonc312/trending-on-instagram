@@ -138,19 +138,19 @@ public class MainActivity extends AppCompatActivity implements TrendingFragment.
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.container, fragment)
-                .addToBackStack(fragment.getClass().toString())
+                .addToBackStack(null)
                 .commit();
     }
 
     private void fetchTagNameSearchAsync(String tag){
-        TagNameSearchApiRequest request = new TagNameSearchApiRequest(this);
+        /*TagNameSearchApiRequest request = new TagNameSearchApiRequest(this);
         request.setTag(tag);
-        sendRequest(request);
+        sendRequest(request);*/
     }
     private void fetchTagSearchAsync(String query){
-        TagSearchApiRequest request = new TagSearchApiRequest(this);
+        /*TagSearchApiRequest request = new TagSearchApiRequest(this);
         request.setQuery(query);
-        sendRequest(request);
+        sendRequest(request);*/
     }
 
     private void sendRequest(ApiRequestInterface request){
@@ -166,6 +166,11 @@ public class MainActivity extends AppCompatActivity implements TrendingFragment.
     @Override
     public void onScrollUp() {
         getSupportActionBar().show();
+    }
+
+    @Override
+    public void onLayoutChange(boolean show) {
+        getSupportActionBar().setDisplayHomeAsUpEnabled(show);
     }
 
     private class LayoutChangeBroadcastReciever extends BroadcastReceiver{
