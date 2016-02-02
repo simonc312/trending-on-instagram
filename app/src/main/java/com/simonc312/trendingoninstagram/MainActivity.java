@@ -19,10 +19,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 
-import com.simonc312.trendingoninstagram.Api.ApiRequestInterface;
-import com.simonc312.trendingoninstagram.Api.InstagramApiHandler;
-import com.simonc312.trendingoninstagram.Api.TagNameSearchApiRequest;
-import com.simonc312.trendingoninstagram.Api.TagSearchApiRequest;
+import com.simonc312.trendingoninstagram.Fragments.SearchFragment;
 import com.simonc312.trendingoninstagram.Fragments.TrendingFragment;
 
 
@@ -62,14 +59,12 @@ public class MainActivity extends AppCompatActivity implements TrendingFragment.
         //getSupportActionBar().setHideOnContentScrollEnabled(true);
         getSupportActionBar().setShowHideAnimationEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.mipmap.ic_launcher);
     }
 
     private void handleSearchIntent(Intent intent) {
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             String query = intent.getStringExtra(SearchManager.QUERY);
-            Toast.makeText(this,query,Toast.LENGTH_SHORT);
-            fetchTagNameSearchAsync(query);
+            Toast.makeText(this, query, Toast.LENGTH_SHORT);
         }
     }
 
@@ -102,9 +97,10 @@ public class MainActivity extends AppCompatActivity implements TrendingFragment.
         switch (item.getItemId()) {
             // Respond to the action bar's Up/Home button
             case android.R.id.home:
-                //NavUtils.navigateUpFromSameTask(this);
                 onBackPressed();
                 return true;
+            case R.id.action_search:
+                swapFragment(SearchFragment.newInstance());
         }
         return super.onOptionsItemSelected(item);
     }
@@ -121,7 +117,7 @@ public class MainActivity extends AppCompatActivity implements TrendingFragment.
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                fetchTagSearchAsync(query);
+
                 return false;
             }
 
@@ -140,22 +136,6 @@ public class MainActivity extends AppCompatActivity implements TrendingFragment.
                 .replace(R.id.container, fragment)
                 .addToBackStack(null)
                 .commit();
-    }
-
-    private void fetchTagNameSearchAsync(String tag){
-        /*TagNameSearchApiRequest request = new TagNameSearchApiRequest(this);
-        request.setTag(tag);
-        sendRequest(request);*/
-    }
-    private void fetchTagSearchAsync(String query){
-        /*TagSearchApiRequest request = new TagSearchApiRequest(this);
-        request.setQuery(query);
-        sendRequest(request);*/
-    }
-
-    private void sendRequest(ApiRequestInterface request){
-        InstagramApiHandler handler = InstagramApiHandler.getInstance();
-        handler.sendRequest(request);
     }
 
     @Override

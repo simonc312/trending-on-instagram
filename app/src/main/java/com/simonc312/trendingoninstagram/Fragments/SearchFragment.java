@@ -1,6 +1,7 @@
 package com.simonc312.trendingoninstagram.Fragments;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -8,10 +9,20 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.simonc312.trendingoninstagram.Adapters.SearchAdapter;
+import com.simonc312.trendingoninstagram.Api.AbstractApiRequest.RequestListener;
+import com.simonc312.trendingoninstagram.Api.ApiRequestInterface;
+import com.simonc312.trendingoninstagram.Api.InstagramApiHandler;
+import com.simonc312.trendingoninstagram.Api.TagSearchApiRequest;
 import com.simonc312.trendingoninstagram.Models.SearchTag;
 import com.simonc312.trendingoninstagram.R;
+import com.simonc312.trendingoninstagram.StyleHelpers.HorizontalDividerItemDecoration;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -24,6 +35,7 @@ import java.util.ArrayList;
 public class SearchFragment extends Fragment {
 
     private SearchFragmentInteractionListener mListener;
+    private SearchAdapter adapter;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -54,12 +66,15 @@ public class SearchFragment extends Fragment {
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
             ArrayList<SearchTag> test = new ArrayList<>();
-            test.add(new SearchTag("vscocam",100000));
-            test.add(new SearchTag("artofvisuals",200000));
             RecyclerView recyclerView = (RecyclerView) view;
+            adapter = new SearchAdapter(test, mListener);
             recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            recyclerView.setAdapter(new SearchAdapter(test, mListener));
+            Drawable drawable = getActivity().getResources().getDrawable(android.R.drawable.divider_horizontal_bright);
+            recyclerView.addItemDecoration(new HorizontalDividerItemDecoration(drawable));
+            recyclerView.setAdapter(adapter);
         }
+        fetchTagSearchAsync("photo");
+
         return view;
     }
 
@@ -79,6 +94,44 @@ public class SearchFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    private void fetchTagNameSearchAsync(String tag){
+        /*TagNameSearchApiRequest request = new TagNameSearchApiRequest(this);
+        request.setTag(tag);
+        sendRequest(request);*/
+    }
+    private void fetchTagSearchAsync(String query){
+        TagSearchApiRequest request = new TagSearchApiRequest(getContext(), new RequestListener() {
+            @Override
+            public void onSuccess(JSONObject response) {
+                try {
+                    JSONArray dataArray = response.getJSONArray("data");
+                    for(int i=0;i<dataArray.length();i++){
+                        JSONObject data = dataArray.getJSONObject(i);
+                        String name = data.getString("name");
+                        int postCount = data.getInt("media_count");
+                        SearchTag tag = new SearchTag(name,postCount);
+                        adapter.addItem(tag);
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(String response) {
+                Toast.makeText(getContext(),response,Toast.LENGTH_LONG).show();
+            }
+        });
+        request.setQuery(query);
+        sendRequest(request);
+    }
+
+    private void sendRequest(ApiRequestInterface request){
+        InstagramApiHandler handler = InstagramApiHandler.getInstance();
+        handler.sendRequest(request);
     }
 
     /**

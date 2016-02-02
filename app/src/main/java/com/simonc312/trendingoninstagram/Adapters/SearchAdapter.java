@@ -15,7 +15,6 @@ import java.util.List;
 /**
  * {@link RecyclerView.Adapter} that can display a {@link SearchTag} and makes a call to the
  * specified {@link SearchFragmentInteractionListener}.
- * TODO: Replace the implementation with code for your data type.
  */
 public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder> {
 
@@ -38,13 +37,18 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
     public void onBindViewHolder(final ViewHolder holder, int position) {
         SearchTag tag = mValues.get(position);
         holder.mItem = tag;
-        holder.mIdView.setText(tag.getName());
-        holder.mContentView.setText(tag.getTotalPosts());
+        holder.mIdView.setText(tag.getDisplayName());
+        holder.mContentView.setText(tag.getDisplayTotalPosts());
     }
 
     @Override
     public int getItemCount() {
         return mValues.size();
+    }
+
+    public void addItem(SearchTag tag) {
+        mValues.add(0,tag);
+        notifyItemInserted(0);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

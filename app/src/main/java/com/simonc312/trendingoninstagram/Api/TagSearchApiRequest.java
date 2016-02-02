@@ -27,15 +27,12 @@ public class TagSearchApiRequest extends AbstractApiRequest {
 
     @Override
     public void processOnSuccess(JSONObject jsonResponse) {
-        //attach parsed data object or collection in broadcase (must make objects Parseable)
-        //LocalBroadcastManager.getInstance(context).sendBroadcast();
-        Toast.makeText(context,"tag search on success",Toast.LENGTH_SHORT).show();
-        Log.d("Json Response",jsonResponse.toString());
+        super.processOnSuccess(jsonResponse);
     }
 
     @Override
     public void processOnFailure(String response) {
-        Toast.makeText(context,"tag search on failure "+response,Toast.LENGTH_SHORT).show();
+        super.processOnFailure(response);
     }
 }
 

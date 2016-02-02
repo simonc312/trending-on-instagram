@@ -23,4 +23,8 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+    <style name="AppTheme.Search.TextAppearance.Light" parent="TextAppearance.AppCompat.Subhead">
+        <item name="android:textColor">@color/md_grey_400</item>
+    </style>
+
 </resources>

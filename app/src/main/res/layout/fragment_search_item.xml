@@ -2,7 +2,10 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:orientation="horizontal">
+    android:paddingTop="@dimen/default_margin"
+    android:paddingBottom="@dimen/default_margin"
+    android:orientation="horizontal"
+    android:background="?attr/selectableItemBackground">
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/image"
@@ -26,5 +29,5 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/id"
         android:layout_alignLeft="@id/id"
-        android:textAppearance="?attr/textAppearanceListItem" />
+        android:textAppearance="@style/AppTheme.Search.TextAppearance.Light" />
 </RelativeLayout>
