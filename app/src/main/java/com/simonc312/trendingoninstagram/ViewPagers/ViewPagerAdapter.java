@@ -1,4 +1,4 @@
-package com.simonc312.trendingoninstagram.ViewPagers;
+package com.simonc312.trendingoninstagram.viewPagers;
 
 import android.graphics.drawable.Drawable;
 import android.support.v4.app.Fragment;

@@ -1,4 +1,4 @@
-package com.simonc312.trendingoninstagram.Api;
+package com.simonc312.trendingoninstagram.api;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;

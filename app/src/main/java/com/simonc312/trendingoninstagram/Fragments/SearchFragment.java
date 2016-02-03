@@ -1,4 +1,4 @@
-package com.simonc312.trendingoninstagram.Fragments;
+package com.simonc312.trendingoninstagram.fragments;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -15,15 +15,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.simonc312.trendingoninstagram.Adapters.SearchAdapter;
-import com.simonc312.trendingoninstagram.Api.AbstractApiRequest.RequestListener;
-import com.simonc312.trendingoninstagram.Api.InstagramApiHandler;
-import com.simonc312.trendingoninstagram.Api.TagSearchApiRequest;
-import com.simonc312.trendingoninstagram.Api.UserNameSearchApiRequest;
-import com.simonc312.trendingoninstagram.Models.SearchTag;
-import com.simonc312.trendingoninstagram.Models.UserTag;
+import com.simonc312.trendingoninstagram.adapters.SearchAdapter;
+import com.simonc312.trendingoninstagram.api.AbstractApiRequest.RequestListener;
+import com.simonc312.trendingoninstagram.api.InstagramApiHandler;
+import com.simonc312.trendingoninstagram.api.TagSearchApiRequest;
+import com.simonc312.trendingoninstagram.api.UserNameSearchApiRequest;
+import com.simonc312.trendingoninstagram.models.SearchTag;
+import com.simonc312.trendingoninstagram.models.UserTag;
 import com.simonc312.trendingoninstagram.R;
-import com.simonc312.trendingoninstagram.Helpers.HorizontalDividerItemDecoration;
+import com.simonc312.trendingoninstagram.helpers.HorizontalDividerItemDecoration;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -196,9 +196,10 @@ public class SearchFragment extends Fragment {
                     List<SearchTag> newList = new ArrayList<>(dataArray.length());
                     for(int i=0;i<dataArray.length();i++){
                         JSONObject data = dataArray.getJSONObject(i);
+                        int id = data.getInt("id");
                         String name = data.getString("username");
                         String uri = data.getString("profile_picture");
-                        UserTag tag = new UserTag(name,uri);
+                        UserTag tag = new UserTag(id,name,uri);
                         newList.add(tag);
                     }
                     adapter.update(newList);

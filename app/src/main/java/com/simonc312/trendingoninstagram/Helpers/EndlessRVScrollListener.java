@@ -1,4 +1,4 @@
-package com.simonc312.trendingoninstagram.Helpers;
+package com.simonc312.trendingoninstagram.helpers;
 
 /**
  * Created by Simon on 2/2/2016.

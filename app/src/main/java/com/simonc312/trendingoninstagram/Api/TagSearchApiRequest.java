@@ -1,8 +1,6 @@
-package com.simonc312.trendingoninstagram.Api;
+package com.simonc312.trendingoninstagram.api;
 
 import android.content.Context;
-import android.util.Log;
-import android.widget.Toast;
 
 
 import org.json.JSONObject;

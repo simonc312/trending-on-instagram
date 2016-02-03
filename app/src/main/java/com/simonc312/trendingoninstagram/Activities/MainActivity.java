@@ -1,4 +1,4 @@
-package com.simonc312.trendingoninstagram.Activities;
+package com.simonc312.trendingoninstagram.activities;
 
 import android.support.v4.app.Fragment;
 
@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.v4.content.LocalBroadcastManager;
 
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -18,7 +17,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 
-import com.simonc312.trendingoninstagram.Fragments.TrendingFragment;
+import com.simonc312.trendingoninstagram.fragments.TrendingFragment;
 import com.simonc312.trendingoninstagram.R;
 
 
@@ -41,7 +40,7 @@ public class MainActivity extends AppCompatActivity
         ButterKnife.bind(this);
         setupSupportActionBar();
         broadcastReciever = new LayoutChangeBroadcastReciever();
-        swapFragment(TrendingFragment.newInstance(true, null));
+        swapFragment(TrendingFragment.newInstance(true, null,TrendingFragment.TRENDING_TYPE));
 
     }
 

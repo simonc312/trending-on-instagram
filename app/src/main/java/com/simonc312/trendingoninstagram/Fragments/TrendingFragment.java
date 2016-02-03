@@ -1,4 +1,4 @@
-package com.simonc312.trendingoninstagram.Fragments;
+package com.simonc312.trendingoninstagram.fragments;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -16,16 +16,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.simonc312.trendingoninstagram.Adapters.TrendingAdapter;
-import com.simonc312.trendingoninstagram.Api.AbstractApiRequest;
-import com.simonc312.trendingoninstagram.Api.InstagramApiHandler;
-import com.simonc312.trendingoninstagram.Api.PopularApiRequest;
-import com.simonc312.trendingoninstagram.Api.TagNameSearchApiRequest;
-import com.simonc312.trendingoninstagram.Models.InstagramPostData;
+import com.simonc312.trendingoninstagram.adapters.TrendingAdapter;
+import com.simonc312.trendingoninstagram.api.AbstractApiRequest;
+import com.simonc312.trendingoninstagram.api.ApiRequestInterface;
+import com.simonc312.trendingoninstagram.api.InstagramApiHandler;
+import com.simonc312.trendingoninstagram.api.PopularApiRequest;
+import com.simonc312.trendingoninstagram.api.TagNameSearchApiRequest;
+import com.simonc312.trendingoninstagram.api.UserNameSearchApiRequest;
+import com.simonc312.trendingoninstagram.api.UserProfileSearchApiRequest;
+import com.simonc312.trendingoninstagram.models.InstagramPostData;
 import com.simonc312.trendingoninstagram.R;
-import com.simonc312.trendingoninstagram.Helpers.EndlessRVScrollListener;
-import com.simonc312.trendingoninstagram.Helpers.GridItemDecoration;
-import com.simonc312.trendingoninstagram.Helpers.RVScrollListener;
+import com.simonc312.trendingoninstagram.helpers.EndlessRVScrollListener;
+import com.simonc312.trendingoninstagram.helpers.GridItemDecoration;
+import com.simonc312.trendingoninstagram.helpers.RVScrollListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -46,6 +49,7 @@ import butterknife.ButterKnife;
 public class TrendingFragment extends Fragment
         implements TrendingAdapter.PostItemListener,
         AbstractApiRequest.RequestListener{
+    public static final int TRENDING_TYPE = -123;
     @BindInt(R.integer.grid_layout_span_count)
     int GRID_LAYOUT_SPAN_COUNT;
     @BindInt(R.integer.grid_layout_item_spacing)
@@ -65,15 +69,17 @@ public class TrendingFragment extends Fragment
     private String query;
     //determines where to add new posts
     private boolean addToEnd = false;
+    private int queryType;
 
     public TrendingFragment() {
         // Required empty public constructor
     }
 
-    public static TrendingFragment newInstance(boolean useGridLayout,String query){
+    public static TrendingFragment newInstance(boolean useGridLayout,String query, int queryType){
         Bundle bundle = new Bundle();
         bundle.putBoolean("useGridLayout", useGridLayout);
-        bundle.putString("query",query);
+        bundle.putString("query", query);
+        bundle.putInt("queryType",queryType);
         TrendingFragment fragment = new TrendingFragment();
         fragment.setArguments(bundle);
         return fragment;
@@ -177,6 +183,7 @@ public class TrendingFragment extends Fragment
         if(!bundle.isEmpty()){
             useGridLayout = bundle.getBoolean("useGridLayout",true);
             query = bundle.getString("query");
+            queryType = bundle.getInt("queryType",TRENDING_TYPE);
         }
     }
 
@@ -205,8 +212,12 @@ public class TrendingFragment extends Fragment
     private void fetchAsync() {
         if(query == null)
             fetchTimelineAsync();
-        else
-            fetchTagNameSearchAsync(query);
+        else{
+            if(queryType == SearchFragment.PEOPLE_TYPE)
+                fetchUserProfileSearchAsync(query);
+            else if(queryType == SearchFragment.TAG_TYPE)
+                fetchTagNameSearchAsync(query);
+        }
     }
 
     private void setupRV(RecyclerView recyclerView, Context context) {
@@ -266,13 +277,22 @@ public class TrendingFragment extends Fragment
     }
 
     private void fetchTimelineAsync() {
-        InstagramApiHandler handler = InstagramApiHandler.getInstance();
-        handler.sendRequest(new PopularApiRequest(getContext(),this));
+        sendRequest(new PopularApiRequest(getContext(), this));
     }
 
     private void fetchTagNameSearchAsync(String tag){
         TagNameSearchApiRequest request = new TagNameSearchApiRequest(getContext(),this);
         request.setTag(tag);
+        sendRequest(request);
+    }
+
+    private void fetchUserProfileSearchAsync(String userid){
+        UserProfileSearchApiRequest request = new UserProfileSearchApiRequest(getContext(),this);
+        request.setUserid(userid);
+        sendRequest(request);
+    }
+
+    private void sendRequest(ApiRequestInterface request){
         InstagramApiHandler.getInstance().sendRequest(request);
     }
 

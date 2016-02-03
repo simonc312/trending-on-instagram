@@ -1,4 +1,4 @@
-package com.simonc312.trendingoninstagram.Adapters;
+package com.simonc312.trendingoninstagram.adapters;
 
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
@@ -8,10 +8,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.simonc312.trendingoninstagram.Fragments.SearchFragment.InteractionListener;
-import com.simonc312.trendingoninstagram.Helpers.ImageLoaderHelper;
-import com.simonc312.trendingoninstagram.Models.SearchTag;
-import com.simonc312.trendingoninstagram.Models.UserTag;
+import com.simonc312.trendingoninstagram.fragments.SearchFragment.InteractionListener;
+import com.simonc312.trendingoninstagram.helpers.ImageLoaderHelper;
+import com.simonc312.trendingoninstagram.models.SearchTag;
+import com.simonc312.trendingoninstagram.models.UserTag;
 import com.simonc312.trendingoninstagram.R;
 
 import java.util.List;

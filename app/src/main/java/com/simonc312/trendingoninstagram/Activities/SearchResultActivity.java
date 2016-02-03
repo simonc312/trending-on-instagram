@@ -1,4 +1,4 @@
-package com.simonc312.trendingoninstagram.Activities;
+package com.simonc312.trendingoninstagram.activities;
 
 import android.app.SearchManager;
 import android.content.BroadcastReceiver;
@@ -15,7 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.simonc312.trendingoninstagram.Fragments.TrendingFragment;
+import com.simonc312.trendingoninstagram.fragments.TrendingFragment;
 import com.simonc312.trendingoninstagram.R;
 
 import butterknife.Bind;
@@ -29,6 +29,7 @@ public class SearchResultActivity extends AppCompatActivity implements TrendingF
     @Bind(R.id.toolbar)
     Toolbar toolbar;
     private String TITLE;
+    private int SEARCH_TYPE;
     private LayoutChangeBroadcastReciever broadcastReciever;
 
     @Override
@@ -39,7 +40,7 @@ public class SearchResultActivity extends AppCompatActivity implements TrendingF
         handleSearchIntent(getIntent());
         setupSupportActionBar();
         broadcastReciever = new LayoutChangeBroadcastReciever();
-        swapFragment(TrendingFragment.newInstance(true,TITLE));
+        swapFragment(TrendingFragment.newInstance(true,TITLE,SEARCH_TYPE));
 
     }
 
@@ -55,14 +56,17 @@ public class SearchResultActivity extends AppCompatActivity implements TrendingF
         actionBar.setShowHideAnimationEnabled(true);
         actionBar.setDisplayShowHomeEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setTitle(String.format("#%s", TITLE));
+        actionBar.setTitle(TITLE);
     }
 
     private void handleSearchIntent(Intent intent) {
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             String query = intent.getStringExtra(SearchManager.QUERY);
-            Toast.makeText(this, query, Toast.LENGTH_SHORT);
-            TITLE = query;
+            Bundle bundle = intent.getBundleExtra(SearchManager.APP_DATA);
+            String title = bundle.getString("title");
+            int queryType = bundle.getInt("queryType");
+            SEARCH_TYPE = queryType;
+            TITLE = title;
         }
     }
 

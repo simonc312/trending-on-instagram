@@ -1,14 +1,12 @@
-package com.simonc312.trendingoninstagram.Activities;
+package com.simonc312.trendingoninstagram.activities;
 
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.MenuItemCompat;
-import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -16,15 +14,15 @@ import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
+import android.view.SearchEvent;
 
-import com.simonc312.trendingoninstagram.Fragments.SearchFragment;
-import static com.simonc312.trendingoninstagram.Fragments.SearchFragment.TAG_TYPE;
-import static com.simonc312.trendingoninstagram.Fragments.SearchFragment.PEOPLE_TYPE;
+import com.simonc312.trendingoninstagram.fragments.SearchFragment;
+import static com.simonc312.trendingoninstagram.fragments.SearchFragment.TAG_TYPE;
+import static com.simonc312.trendingoninstagram.fragments.SearchFragment.PEOPLE_TYPE;
 
-import com.simonc312.trendingoninstagram.Models.SearchTag;
+import com.simonc312.trendingoninstagram.models.SearchTag;
 import com.simonc312.trendingoninstagram.R;
-import com.simonc312.trendingoninstagram.ViewPagers.ViewPagerAdapter;
+import com.simonc312.trendingoninstagram.viewPagers.ViewPagerAdapter;
 
 import butterknife.Bind;
 import butterknife.BindString;
@@ -83,6 +81,16 @@ public class SearchQueryActivity extends AppCompatActivity
     }
 
     @Override
+    public boolean onSearchRequested(SearchEvent searchEvent) {
+        return super.onSearchRequested(searchEvent);
+    }
+
+    @Override
+    public void startSearch(String initialQuery, boolean selectInitialQuery, Bundle appSearchData, boolean globalSearch) {
+        super.startSearch(initialQuery, selectInitialQuery, appSearchData, globalSearch);
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.search_menu, menu);
         MenuItem menuItem = menu.findItem(R.id.action_search);
@@ -110,7 +118,6 @@ public class SearchQueryActivity extends AppCompatActivity
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-
                 return false;
             }
 
@@ -132,7 +139,11 @@ public class SearchQueryActivity extends AppCompatActivity
     @Override
     public void onListFragmentInteraction(SearchTag searchTag) {
         if(searchView != null){
-            searchView.setQuery(searchTag.getName(),true);
+            //searchView.setQuery(searchTag.getSearchName(),true);
+            Bundle bundle = new Bundle();
+            bundle.putString("title",searchTag.getDisplayName());
+            bundle.putInt("queryType",SearchFragment.PEOPLE_TYPE);
+            startSearch(searchTag.getSearchName(), true, bundle, false);
         }
     }
 }

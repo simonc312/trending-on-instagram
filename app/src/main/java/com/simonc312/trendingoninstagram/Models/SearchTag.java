@@ -1,4 +1,4 @@
-package com.simonc312.trendingoninstagram.Models;
+package com.simonc312.trendingoninstagram.models;
 
 /**
  * Created by Simon on 1/31/2016.
@@ -34,5 +34,13 @@ public class SearchTag {
             return "";
         else
             return String.format("%s posts",totalPosts);
+    }
+
+    /**
+     * Override this method to return desired string for search
+     * @return
+     */
+    public String getSearchName(){
+        return name;
     }
 }

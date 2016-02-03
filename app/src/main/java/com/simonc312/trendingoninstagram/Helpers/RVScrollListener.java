@@ -1,4 +1,4 @@
-package com.simonc312.trendingoninstagram.Helpers;
+package com.simonc312.trendingoninstagram.helpers;
 
 import android.support.v7.widget.RecyclerView;
 

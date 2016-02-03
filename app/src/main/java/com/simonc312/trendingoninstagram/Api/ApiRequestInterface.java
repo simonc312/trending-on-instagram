@@ -1,4 +1,4 @@
-package com.simonc312.trendingoninstagram.Api;
+package com.simonc312.trendingoninstagram.api;
 
 import android.content.Context;
 

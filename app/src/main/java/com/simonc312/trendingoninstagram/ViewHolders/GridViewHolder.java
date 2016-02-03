@@ -1,11 +1,11 @@
-package com.simonc312.trendingoninstagram.ViewHolders;
+package com.simonc312.trendingoninstagram.viewHolders;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.simonc312.trendingoninstagram.Adapters.TrendingAdapter;
-import com.simonc312.trendingoninstagram.Helpers.ImageLoaderHelper;
+import com.simonc312.trendingoninstagram.adapters.TrendingAdapter;
+import com.simonc312.trendingoninstagram.helpers.ImageLoaderHelper;
 import com.simonc312.trendingoninstagram.R;
 
 import butterknife.Bind;

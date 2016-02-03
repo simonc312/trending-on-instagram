@@ -1,4 +1,4 @@
-package com.simonc312.trendingoninstagram.Adapters;
+package com.simonc312.trendingoninstagram.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -6,10 +6,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.simonc312.trendingoninstagram.Models.InstagramPostData;
+import com.simonc312.trendingoninstagram.models.InstagramPostData;
 import com.simonc312.trendingoninstagram.R;
-import com.simonc312.trendingoninstagram.ViewHolders.GridViewHolder;
-import com.simonc312.trendingoninstagram.ViewHolders.TrendingPostViewHolder;
+import com.simonc312.trendingoninstagram.viewHolders.GridViewHolder;
+import com.simonc312.trendingoninstagram.viewHolders.TrendingPostViewHolder;
 
 import java.util.ArrayList;
 import java.util.List;

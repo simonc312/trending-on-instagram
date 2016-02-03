@@ -1,4 +1,4 @@
-package com.simonc312.trendingoninstagram.Models;
+package com.simonc312.trendingoninstagram.models;
 
 /**
  * Created by Simon on 1/27/2016.
