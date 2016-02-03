@@ -19,7 +19,9 @@ import com.simonc312.trendingoninstagram.Adapters.SearchAdapter;
 import com.simonc312.trendingoninstagram.Api.AbstractApiRequest.RequestListener;
 import com.simonc312.trendingoninstagram.Api.InstagramApiHandler;
 import com.simonc312.trendingoninstagram.Api.TagSearchApiRequest;
+import com.simonc312.trendingoninstagram.Api.UserNameSearchApiRequest;
 import com.simonc312.trendingoninstagram.Models.SearchTag;
+import com.simonc312.trendingoninstagram.Models.UserTag;
 import com.simonc312.trendingoninstagram.R;
 import com.simonc312.trendingoninstagram.StyleHelpers.HorizontalDividerItemDecoration;
 
@@ -147,6 +149,36 @@ public class SearchFragment extends Fragment {
         InstagramApiHandler.getInstance().sendRequest(request);
     }
 
+    private void fetchUserNameSearchAsync(String query){
+        UserNameSearchApiRequest request = new UserNameSearchApiRequest(getContext(), new RequestListener() {
+            @Override
+            public void onSuccess(JSONObject response) {
+                try {
+                    JSONArray dataArray = response.getJSONArray("data");
+                    List<SearchTag> newList = new ArrayList<>(dataArray.length());
+                    for(int i=0;i<dataArray.length();i++){
+                        JSONObject data = dataArray.getJSONObject(i);
+                        String name = data.getString("username");
+                        String uri = data.getString("profile_picture");
+                        UserTag tag = new UserTag(name,uri);
+                        newList.add(tag);
+                    }
+                    adapter.update(newList);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(String response) {
+                Toast.makeText(getContext(),response,Toast.LENGTH_LONG).show();
+            }
+        });
+        request.setQuery(query);
+        InstagramApiHandler.getInstance().sendRequest(request);
+    }
+
 
     /**
      * This interface must be implemented by activities that contain this
@@ -163,7 +195,8 @@ public class SearchFragment extends Fragment {
         public void onReceive(Context context, Intent intent) {
             if(intent != null){
                 String newQuery = intent.getStringExtra("query");
-                fetchTagSearchAsync(newQuery);
+                //fetchTagSearchAsync(newQuery);
+                fetchUserNameSearchAsync(newQuery);
             }
         }
     }

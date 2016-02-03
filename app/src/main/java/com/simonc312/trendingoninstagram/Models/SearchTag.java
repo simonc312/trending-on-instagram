@@ -4,12 +4,17 @@ package com.simonc312.trendingoninstagram.Models;
  * Created by Simon on 1/31/2016.
  */
 public class SearchTag {
-    private String name;
-    private int totalPosts;
+    protected String name;
+    protected int totalPosts;
 
     public SearchTag(String name, int totalPosts){
         this.name = name;
         this.totalPosts = totalPosts;
+    }
+
+    public SearchTag(String name){
+        this.name = name;
+        this.totalPosts = -1;
     }
 
     public String getName() {
@@ -25,6 +30,9 @@ public class SearchTag {
     }
 
     public String getDisplayTotalPosts(){
-        return String.format("%s posts",totalPosts);
+        if(totalPosts == -1)
+            return "";
+        else
+            return String.format("%s posts",totalPosts);
     }
 }

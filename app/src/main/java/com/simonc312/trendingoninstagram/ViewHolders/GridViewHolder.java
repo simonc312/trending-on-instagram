@@ -1,17 +1,14 @@
 package com.simonc312.trendingoninstagram.ViewHolders;
 
-import android.content.Intent;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 
 import com.simonc312.trendingoninstagram.Adapters.TrendingAdapter;
+import com.simonc312.trendingoninstagram.ImageLoaderHelper;
 import com.simonc312.trendingoninstagram.R;
-import com.squareup.picasso.Picasso;
 
 import butterknife.Bind;
-import butterknife.BindString;
 import butterknife.ButterKnife;
 
 /**
@@ -34,10 +31,7 @@ public class GridViewHolder extends RecyclerView.ViewHolder implements View.OnCl
     }
 
     protected void setImageHelper(String src,ImageView image){
-        Picasso.with(itemView.getContext())
-                .load(src)
-                .placeholder(R.color.placeholder_color)
-                .into(image);
+        ImageLoaderHelper.load(image.getContext(),src,image);
     }
 
     @Override
