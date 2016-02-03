@@ -22,6 +22,7 @@ import static com.simonc312.trendingoninstagram.fragments.SearchFragment.PEOPLE_
 
 import com.simonc312.trendingoninstagram.models.SearchTag;
 import com.simonc312.trendingoninstagram.R;
+import com.simonc312.trendingoninstagram.models.UserTag;
 import com.simonc312.trendingoninstagram.viewPagers.ViewPagerAdapter;
 
 import butterknife.Bind;
@@ -81,16 +82,6 @@ public class SearchQueryActivity extends AppCompatActivity
     }
 
     @Override
-    public boolean onSearchRequested(SearchEvent searchEvent) {
-        return super.onSearchRequested(searchEvent);
-    }
-
-    @Override
-    public void startSearch(String initialQuery, boolean selectInitialQuery, Bundle appSearchData, boolean globalSearch) {
-        super.startSearch(initialQuery, selectInitialQuery, appSearchData, globalSearch);
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.search_menu, menu);
         MenuItem menuItem = menu.findItem(R.id.action_search);
@@ -140,10 +131,11 @@ public class SearchQueryActivity extends AppCompatActivity
     public void onListFragmentInteraction(SearchTag searchTag) {
         if(searchView != null){
             //searchView.setQuery(searchTag.getSearchName(),true);
+            int queryType = searchTag instanceof UserTag ? SearchFragment.PEOPLE_TYPE : SearchFragment.TAG_TYPE;
             Bundle bundle = new Bundle();
             bundle.putString("title",searchTag.getDisplayName());
-            bundle.putInt("queryType",SearchFragment.PEOPLE_TYPE);
-            startSearch(searchTag.getSearchName(), true, bundle, false);
+            bundle.putInt("queryType", queryType);
+            triggerSearch(searchTag.getSearchName(), bundle);
         }
     }
 }

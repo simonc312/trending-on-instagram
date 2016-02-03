@@ -31,6 +31,7 @@ public class SearchResultActivity extends AppCompatActivity implements TrendingF
     private String TITLE;
     private int SEARCH_TYPE;
     private LayoutChangeBroadcastReciever broadcastReciever;
+    private String QUERY;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +41,7 @@ public class SearchResultActivity extends AppCompatActivity implements TrendingF
         handleSearchIntent(getIntent());
         setupSupportActionBar();
         broadcastReciever = new LayoutChangeBroadcastReciever();
-        swapFragment(TrendingFragment.newInstance(true,TITLE,SEARCH_TYPE));
+        swapFragment(TrendingFragment.newInstance(true,QUERY,SEARCH_TYPE));
 
     }
 
@@ -65,6 +66,7 @@ public class SearchResultActivity extends AppCompatActivity implements TrendingF
             Bundle bundle = intent.getBundleExtra(SearchManager.APP_DATA);
             String title = bundle.getString("title");
             int queryType = bundle.getInt("queryType");
+            QUERY = query;
             SEARCH_TYPE = queryType;
             TITLE = title;
         }
