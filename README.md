@@ -1,6 +1,8 @@
 # trending-on-instagram
 Project Week 1 for Codepath Android Dev Bootcamp. 
 
+![walkthrough gif](https://github.com/simonc312/trending-on-instagram/blob/master/screenCapture/TrendingOnInstagramWalkthrough.gif)
+
 ## Features:
 
 - Fetch:
