@@ -16,9 +16,13 @@ public class ImageLoaderHelper {
     }
 
     public static void load(Context context, String src,ImageView image){
+        loadWithPlaceholder(context,src,image,R.color.placeholder_color);
+    }
+
+    public static  void loadWithPlaceholder(Context context, String src,ImageView image, int placeHolderId){
         Picasso.with(context)
                 .load(src)
-                .placeholder(R.color.placeholder_color)
+                .placeholder(placeHolderId)
                 .into(image);
     }
 }

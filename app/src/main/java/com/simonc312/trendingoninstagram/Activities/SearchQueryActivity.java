@@ -21,6 +21,8 @@ import android.view.View;
 import com.simonc312.trendingoninstagram.Fragments.SearchFragment;
 import static com.simonc312.trendingoninstagram.Fragments.SearchFragment.TAG_TYPE;
 import static com.simonc312.trendingoninstagram.Fragments.SearchFragment.PEOPLE_TYPE;
+
+import com.simonc312.trendingoninstagram.Models.SearchTag;
 import com.simonc312.trendingoninstagram.R;
 import com.simonc312.trendingoninstagram.ViewPagers.ViewPagerAdapter;
 
@@ -55,7 +57,6 @@ public class SearchQueryActivity extends AppCompatActivity
         pagerAdapter.addFragment(SearchFragment.newInstance(PEOPLE_TYPE),"People");
         pagerAdapter.addFragment(SearchFragment.newInstance(TAG_TYPE), "Tags");
         viewPager.setAdapter(pagerAdapter);
-
         tabLayout.setupWithViewPager(viewPager);
 
     }
@@ -129,9 +130,9 @@ public class SearchQueryActivity extends AppCompatActivity
     }
 
     @Override
-    public void onListFragmentInteraction(String query) {
+    public void onListFragmentInteraction(SearchTag searchTag) {
         if(searchView != null){
-            searchView.setQuery(query,true);
+            searchView.setQuery(searchTag.getName(),true);
         }
     }
 }

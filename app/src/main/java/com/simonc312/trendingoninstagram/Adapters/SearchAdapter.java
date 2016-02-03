@@ -57,10 +57,11 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
         String name;
         if(tag instanceof UserTag) {
             UserTag userTag = (UserTag) tag;
-            ImageLoaderHelper.load(
+            ImageLoaderHelper.loadWithPlaceholder(
                     holder.imageView.getContext(),
                     userTag.getProfilePicture(),
-                    holder.imageView);
+                    holder.imageView,
+                    R.drawable.image_placeholder);
             name = userTag.getDisplayName();
         } else{
             name = tag.getDisplayName();
@@ -108,7 +109,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
 
         @Override
         public void onClick(View v) {
-            mListener.onListFragmentInteraction(mItem.getName());
+            mListener.onListFragmentInteraction(mItem);
         }
     }
 }

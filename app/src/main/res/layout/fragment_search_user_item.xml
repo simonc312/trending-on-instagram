@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/default_margin"
         android:layout_centerVertical="true"
-        android:src="@drawable/ic_favorite_red_500_18dp"/>
+        android:src="@drawable/image_placeholder"/>
 
     <TextView
         android:id="@+id/id"

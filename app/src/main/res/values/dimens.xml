@@ -8,4 +8,5 @@
     <dimen name="appbar_height">200dp</dimen>
     <dimen name="text_margin">16dp</dimen>
     <dimen name="margin_4">4dp</dimen>
+    <dimen name="thumbnail_size">150px</dimen>
 </resources>

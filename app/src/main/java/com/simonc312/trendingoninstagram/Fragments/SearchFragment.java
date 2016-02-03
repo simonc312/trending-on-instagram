@@ -225,7 +225,7 @@ public class SearchFragment extends Fragment {
      * activity.
      */
     public interface InteractionListener {
-        void onListFragmentInteraction(String query);
+        void onListFragmentInteraction(SearchTag selectedTag);
     }
 
     private class SearchQueryChangeReceiver extends BroadcastReceiver{
