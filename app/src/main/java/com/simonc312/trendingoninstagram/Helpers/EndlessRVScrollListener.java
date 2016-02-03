@@ -1,9 +1,8 @@
-package com.simonc312.trendingoninstagram.StyleHelpers;
+package com.simonc312.trendingoninstagram.Helpers;
 
 /**
  * Created by Simon on 2/2/2016.
  */
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 public abstract class EndlessRVScrollListener extends RecyclerView.OnScrollListener {

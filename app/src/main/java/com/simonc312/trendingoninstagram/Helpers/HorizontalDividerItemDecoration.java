@@ -1,4 +1,4 @@
-package com.simonc312.trendingoninstagram.StyleHelpers;
+package com.simonc312.trendingoninstagram.Helpers;
 
 import android.graphics.Canvas;
 import android.graphics.Rect;
@@ -19,7 +19,7 @@ public class HorizontalDividerItemDecoration extends RecyclerView.ItemDecoration
     @Override
     public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
         super.onDraw(c, parent, state);
-        drawVertical(c,parent);
+        drawVertical(c, parent);
     }
 
     public void drawVertical(Canvas c, RecyclerView parent){

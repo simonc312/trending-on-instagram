@@ -1,4 +1,4 @@
-package com.simonc312.trendingoninstagram.StyleHelpers;
+package com.simonc312.trendingoninstagram.Helpers;
 
 /**
  * RecyclerView position helper class for any LayoutManager.

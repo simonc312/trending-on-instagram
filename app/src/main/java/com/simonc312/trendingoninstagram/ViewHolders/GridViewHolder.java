@@ -5,7 +5,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.simonc312.trendingoninstagram.Adapters.TrendingAdapter;
-import com.simonc312.trendingoninstagram.ImageLoaderHelper;
+import com.simonc312.trendingoninstagram.Helpers.ImageLoaderHelper;
 import com.simonc312.trendingoninstagram.R;
 
 import butterknife.Bind;

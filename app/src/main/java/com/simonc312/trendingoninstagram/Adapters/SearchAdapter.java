@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.simonc312.trendingoninstagram.Fragments.SearchFragment.InteractionListener;
-import com.simonc312.trendingoninstagram.ImageLoaderHelper;
+import com.simonc312.trendingoninstagram.Helpers.ImageLoaderHelper;
 import com.simonc312.trendingoninstagram.Models.SearchTag;
 import com.simonc312.trendingoninstagram.Models.UserTag;
 import com.simonc312.trendingoninstagram.R;

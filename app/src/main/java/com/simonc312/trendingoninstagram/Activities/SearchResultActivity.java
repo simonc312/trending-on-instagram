@@ -1,4 +1,4 @@
-package com.simonc312.trendingoninstagram;
+package com.simonc312.trendingoninstagram.Activities;
 
 import android.app.SearchManager;
 import android.content.BroadcastReceiver;
@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.simonc312.trendingoninstagram.Fragments.TrendingFragment;
+import com.simonc312.trendingoninstagram.R;
 
 import butterknife.Bind;
 import butterknife.BindString;

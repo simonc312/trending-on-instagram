@@ -10,7 +10,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".Activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -19,16 +19,16 @@
 
         </activity>
 
-        <activity android:name=".SearchQueryActivity">
+        <activity android:name=".Activities.SearchQueryActivity">
             <meta-data android:name="android.app.default_searchable"
                 android:value=".SearchResultActivity" />
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
+                android:value=".Activities.MainActivity" />
         </activity>
 
-        <activity android:name=".SearchResultActivity">
+        <activity android:name=".Activities.SearchResultActivity">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH"/>
             </intent-filter>
@@ -39,7 +39,7 @@
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".SearchQueryActivity" />
+                android:value=".Activities.SearchQueryActivity" />
         </activity>
     </application>
 

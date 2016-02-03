@@ -1,8 +1,9 @@
-package com.simonc312.trendingoninstagram;
+package com.simonc312.trendingoninstagram.Helpers;
 
 import android.content.Context;
 import android.widget.ImageView;
 
+import com.simonc312.trendingoninstagram.R;
 import com.squareup.picasso.Picasso;
 
 /**

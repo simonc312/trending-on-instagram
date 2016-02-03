@@ -23,9 +23,9 @@ import com.simonc312.trendingoninstagram.Api.PopularApiRequest;
 import com.simonc312.trendingoninstagram.Api.TagNameSearchApiRequest;
 import com.simonc312.trendingoninstagram.Models.InstagramPostData;
 import com.simonc312.trendingoninstagram.R;
-import com.simonc312.trendingoninstagram.StyleHelpers.EndlessRVScrollListener;
-import com.simonc312.trendingoninstagram.StyleHelpers.GridItemDecoration;
-import com.simonc312.trendingoninstagram.StyleHelpers.RVScrollListener;
+import com.simonc312.trendingoninstagram.Helpers.EndlessRVScrollListener;
+import com.simonc312.trendingoninstagram.Helpers.GridItemDecoration;
+import com.simonc312.trendingoninstagram.Helpers.RVScrollListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;

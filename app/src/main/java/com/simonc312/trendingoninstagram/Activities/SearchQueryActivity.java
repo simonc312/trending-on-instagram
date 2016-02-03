@@ -1,25 +1,28 @@
-package com.simonc312.trendingoninstagram;
+package com.simonc312.trendingoninstagram.Activities;
 
 import android.app.SearchManager;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v4.view.MenuCompat;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v4.view.ViewCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
+import android.view.View;
 
 import com.simonc312.trendingoninstagram.Fragments.SearchFragment;
-import com.simonc312.trendingoninstagram.Fragments.TrendingFragment;
+import static com.simonc312.trendingoninstagram.Fragments.SearchFragment.TAG_TYPE;
+import static com.simonc312.trendingoninstagram.Fragments.SearchFragment.PEOPLE_TYPE;
+import com.simonc312.trendingoninstagram.R;
+import com.simonc312.trendingoninstagram.ViewPagers.ViewPagerAdapter;
 
 import butterknife.Bind;
 import butterknife.BindString;
@@ -29,17 +32,31 @@ import butterknife.ButterKnife;
 public class SearchQueryActivity extends AppCompatActivity
         implements SearchFragment.InteractionListener {
     @BindString(R.string.action_query_changed) String ACTION_QUERY_CHANGED;
+    @Bind(R.id.tabs)
+    TabLayout tabLayout;
     @Bind(R.id.toolbar)
     Toolbar toolbar;
+    @Bind(R.id.viewpager)
+    ViewPager viewPager;
     private SearchView searchView;
+    private ViewPagerAdapter pagerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_search_query);
         ButterKnife.bind(this);
         setupSupportActionBar();
-        swapFragment(SearchFragment.newInstance());
+        setupViewPager();
+    }
+
+    private void setupViewPager() {
+        pagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
+        pagerAdapter.addFragment(SearchFragment.newInstance(PEOPLE_TYPE),"People");
+        pagerAdapter.addFragment(SearchFragment.newInstance(TAG_TYPE), "Tags");
+        viewPager.setAdapter(pagerAdapter);
+
+        tabLayout.setupWithViewPager(viewPager);
 
     }
 
@@ -109,26 +126,6 @@ public class SearchQueryActivity extends AppCompatActivity
         });
 
         return super.onCreateOptionsMenu(menu);
-    }
-
-    /**
-     * If no longer focused on searching and you press back, finish activity
-     */
-   /* @Override
-    public void onBackPressed(){
-        if(searchView.isFocused()){
-            super.onBackPressed();
-        } else{
-            finish();
-        }
-    }*/
-
-    private void swapFragment(Fragment fragment){
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.container, fragment)
-                .addToBackStack(null)
-                .commit();
     }
 
     @Override
