@@ -3,8 +3,6 @@ Project Week 1 for Codepath Android Dev Bootcamp.
 
 ## Features:
 
-- Swipe to refresh 
-- Display data in recycler view with view holder pattern
 - Fetch:
 
     1) like count
@@ -19,29 +17,34 @@ Project Week 1 for Codepath Android Dev Bootcamp.
     
     6) time posted
     
-    7) comments with usernames
+    7) comments with usernames (TODO)
     
 - Extra Features:
 
-    1) Searchview
+    1) Searchview 
     
+    2) Tab layout and view pager for People and Tags 
     
+    3) View most recent posts by user or hashtag 
 
 - Style:
 
-    1) Circle crop profile picture 
+    [x] Circle crop profile picture 
     
-    2) Add heart icon next to like count 
+    [x] Add heart icon next to like count 
     
-    3) Format time posted to relative time 
+    [x] Format time posted to relative time 
     ex. Just Now, 1d, 2w, 3m, 1y etc 
     
-    4) Placeholder image while loading
+    [x] Placeholder image while loading
     
-    5) Prevent reloading if no wifi detected 
+    [x] Endless bottom scrolling 
     
-    6) Display error image if failed to load 
+    [] Prevent reloading if no wifi detected
     
-    7) Highlight url hashtags and usernames 
+    [] Display error image if failed to load 
     
-    8) Search on click hashtag or username
+    [] Highlight url hashtags and usernames
+    
+    [] Search on click hashtag or username
+    
