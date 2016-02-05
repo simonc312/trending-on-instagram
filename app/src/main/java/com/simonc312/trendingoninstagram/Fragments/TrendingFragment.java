@@ -237,18 +237,6 @@ public class TrendingFragment extends Fragment
             }
         });
 
-        recyclerView.addOnScrollListener(new RVScrollListener() {
-            @Override
-            public void onHide() {
-                mListener.onScrollDown();
-            }
-
-            @Override
-            public void onShow() {
-                mListener.onScrollUp();
-            }
-        });
-
         updateRV(recyclerView, getLayout(), adapter);
     }
 
@@ -336,10 +324,6 @@ public class TrendingFragment extends Fragment
      * activity.
      */
     public interface InteractionListener {
-
-        void onScrollDown();
-
-        void onScrollUp();
 
         void onLayoutChange(boolean show);
 

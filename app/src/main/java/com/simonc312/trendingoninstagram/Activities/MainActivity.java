@@ -104,16 +104,6 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onScrollDown() {
-        getSupportActionBar().hide();
-    }
-
-    @Override
-    public void onScrollUp() {
-        getSupportActionBar().show();
-    }
-
-    @Override
     public void onLayoutChange(boolean show) {
         getSupportActionBar().setDisplayHomeAsUpEnabled(show);
     }

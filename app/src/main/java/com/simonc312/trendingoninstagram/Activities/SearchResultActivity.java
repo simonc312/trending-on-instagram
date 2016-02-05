@@ -120,16 +120,6 @@ public class SearchResultActivity extends AppCompatActivity implements TrendingF
     }
 
     @Override
-    public void onScrollDown() {
-        getSupportActionBar().hide();
-    }
-
-    @Override
-    public void onScrollUp() {
-        getSupportActionBar().show();
-    }
-
-    @Override
     public void onLayoutChange(boolean show) {
         // always keep support action bar displayed because its not the parent activity unlike Main
         //getSupportActionBar().setDisplayHomeAsUpEnabled(show);

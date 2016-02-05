@@ -133,9 +133,11 @@ public class SearchQueryActivity extends AppCompatActivity
             //searchView.setQuery(searchTag.getSearchName(),true);
             int queryType = searchTag instanceof UserTag ? SearchFragment.PEOPLE_TYPE : SearchFragment.TAG_TYPE;
             Bundle bundle = new Bundle();
-            bundle.putString("title",searchTag.getDisplayName());
+            bundle.putString("title", searchTag.getDisplayName());
             bundle.putInt("queryType", queryType);
             triggerSearch(searchTag.getSearchName(), bundle);
+            //startSearch(searchTag.getSearchName(),true,bundle,false);
+
         }
     }
 }
