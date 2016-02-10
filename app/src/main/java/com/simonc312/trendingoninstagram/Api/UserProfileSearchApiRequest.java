@@ -10,6 +10,7 @@ import org.json.JSONObject;
 public class UserProfileSearchApiRequest extends AbstractApiRequest {
 
     private String userid;
+
     public UserProfileSearchApiRequest(Context context, RequestListener listener){
         super(context, listener);
         userid = "145126571";
@@ -17,6 +18,10 @@ public class UserProfileSearchApiRequest extends AbstractApiRequest {
 
     public void setUserid(String userid){
         this.userid = userid;
+    }
+
+    public void setNextPageId(String pageid){
+        addParam("max_id",pageid);
     }
 
     @Override

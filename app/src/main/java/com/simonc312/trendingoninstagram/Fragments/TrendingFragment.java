@@ -70,6 +70,7 @@ public class TrendingFragment extends Fragment
     //determines where to add new posts
     private boolean addToEnd = false;
     private int queryType;
+    private String pageid; //for pagination
 
     public TrendingFragment() {
         // Required empty public constructor
@@ -277,6 +278,8 @@ public class TrendingFragment extends Fragment
     private void fetchUserProfileSearchAsync(String userid){
         UserProfileSearchApiRequest request = new UserProfileSearchApiRequest(getContext(),this);
         request.setUserid(userid);
+        if(pageid != null)
+            request.setNextPageId(pageid);
         sendRequest(request);
     }
 
@@ -292,6 +295,9 @@ public class TrendingFragment extends Fragment
             // - images.standard_resolution.url
             // - user.username
             // - likes.count
+            if(!response.isNull("pagination"))
+                handlePageination(response.getJSONObject("pagination"));
+
             for(int i=0; i<dataArray.length();i++){
                 JSONObject data = dataArray.getJSONObject(i);
                 if(data.getString("type").equals("image")){
@@ -307,6 +313,17 @@ public class TrendingFragment extends Fragment
                 }
             }
 
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void handlePageination(JSONObject pagination) {
+        try {
+            if(!pagination.isNull("next_max_id"))
+                this.pageid = pagination.getString("next_max_id");
+            else
+                this.pageid = null;
         } catch (JSONException e) {
             e.printStackTrace();
         }
