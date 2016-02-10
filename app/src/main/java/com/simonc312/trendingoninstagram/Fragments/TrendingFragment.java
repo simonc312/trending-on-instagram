@@ -272,6 +272,8 @@ public class TrendingFragment extends Fragment
     private void fetchTagNameSearchAsync(String tag){
         TagNameSearchApiRequest request = new TagNameSearchApiRequest(getContext(),this);
         request.setTag(tag);
+        if(pageid != null)
+            request.setPageId(pageid);
         sendRequest(request);
     }
 
@@ -322,6 +324,8 @@ public class TrendingFragment extends Fragment
         try {
             if(!pagination.isNull("next_max_id"))
                 this.pageid = pagination.getString("next_max_id");
+            else if(!pagination.isNull("next_max_tag_id"))
+                this.pageid = pagination.getString("next_max_tag_id");
             else
                 this.pageid = null;
         } catch (JSONException e) {

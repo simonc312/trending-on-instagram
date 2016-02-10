@@ -19,6 +19,10 @@ public class TagNameSearchApiRequest extends AbstractApiRequest {
         this.tag = tag;
     }
 
+    public void setPageId(String pageid){
+        addParam("max_tag_id",pageid);
+    }
+
     @Override
     public String getUrl() {
         return String.format("https://api.instagram.com/v1/tags/%s/media/recent?",tag);
