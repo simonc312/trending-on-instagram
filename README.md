@@ -33,22 +33,22 @@ Project Week 1 for Codepath Android Dev Bootcamp.
 
 - Style:
 
-    [x] Circle crop profile picture 
+    - [x] Circle crop profile picture 
     
-    [x] Add heart icon next to like count 
+    - [x] Add heart icon next to like count 
     
-    [x] Format time posted to relative time 
+    - [x] Format time posted to relative time 
     ex. Just Now, 1d, 2w, 3m, 1y etc 
     
-    [x] Placeholder image while loading
+    - [x] Placeholder image while loading
     
-    [x] Endless bottom scrolling 
+    - [x] Endless bottom scrolling 
     
-    [] Prevent reloading if no wifi detected
+    - [ ] Prevent reloading if no wifi detected
     
-    [] Display error image if failed to load 
+    - [ ] Display error image if failed to load 
     
-    [] Highlight url hashtags and usernames
+    - [x] Highlight url hashtags and usernames
     
-    [] Search on click hashtag or username
+    - [x] Search on click hashtag or username
     
