@@ -28,6 +28,8 @@ Project Week 1 for Codepath Android Dev Bootcamp.
     2) Tab layout and view pager for People and Tags 
     
     3) View most recent posts by user or hashtag 
+    
+    4) Pagination support for users and tags
 
 - Style:
 

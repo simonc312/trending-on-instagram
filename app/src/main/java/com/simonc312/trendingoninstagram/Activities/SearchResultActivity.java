@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
@@ -15,8 +16,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.simonc312.trendingoninstagram.fragments.SearchFragment;
 import com.simonc312.trendingoninstagram.fragments.TrendingFragment;
 import com.simonc312.trendingoninstagram.R;
+
+import java.net.URI;
 
 import butterknife.Bind;
 import butterknife.BindString;
@@ -39,10 +43,25 @@ public class SearchResultActivity extends AppCompatActivity implements TrendingF
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         handleSearchIntent(getIntent());
+        handleSchemeIntent(getIntent());
         setupSupportActionBar();
         broadcastReciever = new LayoutChangeBroadcastReciever();
         swapFragment(TrendingFragment.newInstance(true,QUERY,SEARCH_TYPE));
 
+    }
+
+    private void handleSchemeIntent(Intent intent) {
+        if(intent != null){
+            Uri data = intent.getData();
+            if(data == null) return;
+            if(data.getScheme().equals(getString(R.string.profile_scheme))){
+                String title = data.getQueryParameter("name");
+                String query = data.getQueryParameter("id");
+                QUERY = query;
+                SEARCH_TYPE = SearchFragment.PEOPLE_TYPE;
+                TITLE = title;
+            }
+        }
     }
 
     @Override

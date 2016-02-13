@@ -5,22 +5,13 @@ package com.simonc312.trendingoninstagram.models;
  */
 public class InstagramPostData {
 
+    private String userid;
     private String username;
     private String likeCount;
     private String timePosted;
     private String caption;
     private String imageSource;
     private String profileImageSource;
-
-
-    public InstagramPostData(){
-        this.username = "sleepgroper";
-        this.likeCount = "420";
-        this.timePosted = "1296251679";
-        this.caption = "Caption caption caption";
-        this.imageSource = "iv_image source";
-        this.profileImageSource = "profile img";
-    }
 
     public InstagramPostData(String username, String profileImageSource, String likeCount, String timePosted, String caption, String imageSource){
         this.username = username;
@@ -29,6 +20,15 @@ public class InstagramPostData {
         this.timePosted = timePosted;
         this.caption = caption;
         this.imageSource = imageSource;
+    }
+
+    public InstagramPostData(String userid, String username, String profileImageSource, String likeCount, String timePosted, String caption, String imageSource){
+        this(username,profileImageSource,likeCount,timePosted,caption,imageSource);
+        this.userid = userid;
+    }
+
+    public String getUserid() {
+        return userid;
     }
 
     public String getUsername() {
@@ -73,4 +73,9 @@ public class InstagramPostData {
     public String getDisplayLikeCount(){
         return String.format("%s likes",this.likeCount);
     }
+
+    public String getDisplayName(){
+        return String.format("@%s",username);
+    }
+
 }

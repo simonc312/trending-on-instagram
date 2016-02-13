@@ -47,10 +47,11 @@ public class TrendingAdapter extends RecyclerView.Adapter<GridViewHolder>{
         if(!isGridLayout){
             TrendingPostViewHolder trendingPostViewHolder = (TrendingPostViewHolder) holder;
             trendingPostViewHolder.setProfileImage(data.getProfileImageSource());
-            trendingPostViewHolder.setUsername(data.getUsername());
+            trendingPostViewHolder.setUsername(data.getDisplayName());
             trendingPostViewHolder.setLikes(data.getDisplayLikeCount());
             trendingPostViewHolder.setTimePosted(data.getRelativeTimePosted());
             trendingPostViewHolder.setCaption(data.getCaption());
+            trendingPostViewHolder.linkifyUsername();
         }
     }
 
