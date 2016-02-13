@@ -45,13 +45,14 @@ public class TrendingAdapter extends RecyclerView.Adapter<GridViewHolder>{
         holder.setPostImage(data.getImageSource());
 
         if(!isGridLayout){
-            TrendingPostViewHolder trendingPostViewHolder = (TrendingPostViewHolder) holder;
-            trendingPostViewHolder.setProfileImage(data.getProfileImageSource());
-            trendingPostViewHolder.setUsername(data.getDisplayName());
-            trendingPostViewHolder.setLikes(data.getDisplayLikeCount());
-            trendingPostViewHolder.setTimePosted(data.getRelativeTimePosted());
-            trendingPostViewHolder.setCaption(data.getCaption());
-            trendingPostViewHolder.linkifyUsername();
+            TrendingPostViewHolder trendingHolder = (TrendingPostViewHolder) holder;
+            trendingHolder.setProfileImage(data.getProfileImageSource());
+            trendingHolder.setUsername(data.getDisplayName());
+            trendingHolder.setLikes(data.getDisplayLikeCount());
+            trendingHolder.setTimePosted(data.getRelativeTimePosted());
+            trendingHolder.setCaption(data.getCaption());
+            trendingHolder.linkifyUsername(data.getUserid());
+            trendingHolder.linkifyCaptionTags();
         }
     }
 

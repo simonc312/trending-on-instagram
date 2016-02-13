@@ -35,6 +35,8 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data android:scheme="@string/profile_scheme"/>
+                <data android:scheme="@string/tag_scheme"/>
+
             </intent-filter>
 
             <meta-data android:name="android.app.searchable"

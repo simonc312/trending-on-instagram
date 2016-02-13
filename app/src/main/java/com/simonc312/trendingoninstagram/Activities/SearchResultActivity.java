@@ -50,20 +50,6 @@ public class SearchResultActivity extends AppCompatActivity implements TrendingF
 
     }
 
-    private void handleSchemeIntent(Intent intent) {
-        if(intent != null){
-            Uri data = intent.getData();
-            if(data == null) return;
-            if(data.getScheme().equals(getString(R.string.profile_scheme))){
-                String title = data.getQueryParameter("name");
-                String query = data.getQueryParameter("id");
-                QUERY = query;
-                SEARCH_TYPE = SearchFragment.PEOPLE_TYPE;
-                TITLE = title;
-            }
-        }
-    }
-
     @Override
     public void onNewIntent(Intent intent){
         setIntent(intent);
@@ -77,18 +63,6 @@ public class SearchResultActivity extends AppCompatActivity implements TrendingF
         actionBar.setDisplayShowHomeEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle(TITLE);
-    }
-
-    private void handleSearchIntent(Intent intent) {
-        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            String query = intent.getStringExtra(SearchManager.QUERY);
-            Bundle bundle = intent.getBundleExtra(SearchManager.APP_DATA);
-            String title = bundle.getString("title");
-            int queryType = bundle.getInt("queryType");
-            QUERY = query;
-            SEARCH_TYPE = queryType;
-            TITLE = title;
-        }
     }
 
     @Override
@@ -148,6 +122,29 @@ public class SearchResultActivity extends AppCompatActivity implements TrendingF
     public void onBackPress(boolean pop){
         if(pop){
             finish();
+        }
+    }
+
+    private void handleSearchIntent(Intent intent) {
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            Bundle bundle = intent.getBundleExtra(SearchManager.APP_DATA);
+            QUERY = intent.getStringExtra(SearchManager.QUERY);
+            SEARCH_TYPE = bundle.getInt("queryType");
+            TITLE = bundle.getString("title");
+        }
+    }
+
+    private void handleSchemeIntent(Intent intent) {
+        if(intent != null){
+            Uri data = intent.getData();
+            if(data == null) return;
+            QUERY = data.getQueryParameter("id");
+            TITLE = data.getQueryParameter("name");
+            if(data.getScheme().equals(getString(R.string.profile_scheme))){
+                SEARCH_TYPE = SearchFragment.PEOPLE_TYPE;
+            } else if(data.getScheme().equals(getString(R.string.tag_scheme))){
+                SEARCH_TYPE = SearchFragment.TAG_TYPE;
+            }
         }
     }
 
